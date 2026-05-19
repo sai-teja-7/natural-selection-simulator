@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Agent Simulator</title>
+
+<style>
+body { margin: 0; overflow: hidden; background: #87CEEB; font-family: sans-serif; }
+canvas { display: block; }
+
+/* Top Left Stats Panel */
+#stats-panel {
+    position: absolute; top: 15px; left: 15px; color: white;
+    background: rgba(0,0,0,0.6); padding: 12px 18px; border-radius: 8px; font-size: 16px;
+    border: 1px solid #444; pointer-events: none;
+}
+.sub-text {
+    font-size: 14px; color: #ccc; margin-top: 8px;
+    display: flex; gap: 15px;
+}
+
+/* TOP MIDDLE DAY BANNER + PROGRESS BAR */
+#day-banner {
+    position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.8); color: white; padding: 12px 24px;
+    border-radius: 8px; font-size: 22px; font-weight: bold; letter-spacing: 2px;
+    text-transform: uppercase; border: 1px solid #555; pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    display: flex; flex-direction: column; align-items: center; min-width: 180px;
+}
+#time-bar-container {
+    width: 100%; height: 6px; background: #222; margin-top: 8px; 
+    border-radius: 3px; overflow: hidden; position: relative;
+}
+#time-bar-fill {
+    width: 0%; height: 100%; background: #ffcc00; 
+    transition: width 0.1s linear, background-color 0.5s;
+}
+
+/* Bottom Center Control Panel */
+#control-panel {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.8); padding: 15px 20px; border-radius: 10px;
+    border: 1px solid #555; color: white; display: flex; flex-direction: column; gap: 12px;
+    font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+.control-row {
+    display: flex; justify-content: center; align-items: center; gap: 15px;
+}
+input[type="number"] {
+    width: 60px; padding: 4px; border-radius: 4px; border: 1px solid #777;
+    background: #333; color: white; text-align: center; font-weight: bold;
+}
+button {
+    padding: 8px 12px; background: #66cc66; color: #111; 
+    border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
+    transition: filter 0.2s;
+}
+button:hover { filter: brightness(1.2); }
+#btnPause { background: #e6b800; width: 110px; } 
+#btnSkip { background: #4da6ff; } 
+#btnAutoRotate { background: #ff9933; width: 130px; }
+#btnRotate { background: #b366ff; }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+<div id="stats-panel">
+    <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Evolution Sandbox</div>
+    <div>Pop: <b id="popCount" style="color:white;">40</b> | Food: <b id="foodCount" style="color:white;">80</b></div>
+    <div class="sub-text">
+        <span>Generation: <b id="genCount" style="color:white;">1</b></span>
+    </div>
+</div>
+
+<div id="day-banner">
+    <div>Day <span id="dayBannerCount">1</span></div>
+    <div id="time-bar-container">
+        <div id="time-bar-fill"></div>
+    </div>
+</div>
+
+<div id="control-panel">
+    <div class="control-row">
+        <label>Start Pop: <input type="number" id="inputPop" value="40" min="2" max="200"></label>
+        <label>Daily Food: <input type="number" id="inputFood" value="80" min="10" max="400"></label>
+        <label>Day (s): <input type="number" id="inputDay" value="15" min="1" max="60"></label>
+        <label>Sim Speed: <input type="number" id="inputSpeed" value="1" min="0.1" max="20" step="0.5">x</label>
+    </div>
+    <div class="control-row">
+        <button id="btnRestart">Apply & Restart Sim</button>
+        <button id="btnPause">Pause Sim</button>
+        <button id="btnSkip">Force End Day</button>
+    </div>
+    <div class="control-row" style="border-top: 1px solid #444; padding-top: 12px;">
+        <button id="btnRotate">Step Rotate 45°</button>
+        <button id="btnAutoRotate">Auto Rotate: OFF</button>
+        <label>Auto Speed: <input type="number" id="inputAutoSpeed" value="2.0" step="0.5"></label>
+    </div>
+</div>
+
+<script>
+// ======================================
+// SCENE, CAMERA & ORBIT CONTROLS
+// ======================================
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87CEEB); 
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.set(0, 50, 65);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; 
+controls.dampingFactor = 0.05;
+controls.maxPolarAngle = Math.PI / 2 - 0.05; 
+controls.minDistance = 20; 
+controls.maxDistance = 150; 
+controls.autoRotate = false;
+controls.autoRotateSpeed = 2.0;
+
+// ======================================
+// DYNAMIC LIGHTING
+// ======================================
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+scene.add(ambientLight);
+
+const sun = new THREE.DirectionalLight(0xffffff, 0.6);
+sun.castShadow = true;
+sun.shadow.bias = -0.001;
+sun.shadow.normalBias = 0.02; 
+sun.shadow.camera.left = -40; sun.shadow.camera.right = 40;
+sun.shadow.camera.top = 40; sun.shadow.camera.bottom = -40;
+scene.add(sun);
+
+// FIX 1: The Moonlight Hemisphere Light
+const moonLight = new THREE.HemisphereLight(0x4466cc, 0x111122, 0.0); // Starts at 0 intensity
+scene.add(moonLight);
+
+const colorMorning = new THREE.Color(0x87CEEB); 
+const colorMidday = new THREE.Color(0x4FA9E6);  
+const colorSunset = new THREE.Color(0xFF6B4A);  
+const colorNight = new THREE.Color(0x0a0a1a);   
+
+// ======================================
+// BOARD 
+// ======================================
+const boardWidth = 45; const boardDepth = 35; const cornerRadius = 3;
+
+const shape = new THREE.Shape();
+shape.moveTo(-boardWidth/2 + cornerRadius, -boardDepth/2); 
+shape.lineTo(boardWidth/2 - cornerRadius, -boardDepth/2); 
+shape.quadraticCurveTo(boardWidth/2, -boardDepth/2, boardWidth/2, -boardDepth/2 + cornerRadius); 
+shape.lineTo(boardWidth/2, boardDepth/2 - cornerRadius); 
+shape.quadraticCurveTo(boardWidth/2, boardDepth/2, boardWidth/2 - cornerRadius, boardDepth/2); 
+shape.lineTo(-boardWidth/2 + cornerRadius, boardDepth/2); 
+shape.quadraticCurveTo(-boardWidth/2, boardDepth/2, -boardWidth/2, boardDepth/2 - cornerRadius); 
+shape.lineTo(-boardWidth/2, -boardDepth/2 + cornerRadius); 
+shape.quadraticCurveTo(-boardWidth/2, -boardDepth/2, -boardWidth/2 + cornerRadius, -boardDepth/2);
+
+const extrudeSettings = { depth: 0.1, bevelEnabled: true, bevelSegments: 4, steps: 1, bevelSize: 0.4, bevelThickness: 0.4 };
+const boardGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings); 
+boardGeometry.rotateX(-Math.PI / 2); 
+boardGeometry.translate(0, -0.4, 0); 
+
+// FIX 2: Luminescent Board Material (Base emissive color added, intensity starts at 0)
+const boardMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0xf2f2f2, roughness: 0.8, metalness: 0.1,
+    emissive: 0x113355, emissiveIntensity: 0.0 
+});
+const board = new THREE.Mesh(boardGeometry, boardMaterial); 
+board.receiveShadow = true; 
+
+// FIX 3: Tron / Neon Edges
+const edgesGeometry = new THREE.EdgesGeometry(boardGeometry, 15); // Extracts only hard edges
+const neonMaterial = new THREE.LineBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.0 });
+const neonEdges = new THREE.LineSegments(edgesGeometry, neonMaterial);
+board.add(neonEdges); // Attach directly to the board
+
+scene.add(board);
+
+// ======================================
+// GEOMETRIES 
+// ======================================
+const blobGeometry = new THREE.SphereGeometry(1, 32, 32);
+const positions = blobGeometry.attributes.position;
+for(let i=0; i<positions.count; i++) {
+    const y = positions.getY(i);
+    const scale = 1.0 - (y * 0.15); 
+    positions.setX(i, positions.getX(i) * scale);
+    positions.setZ(i, positions.getZ(i) * scale);
+}
+blobGeometry.computeVertexNormals();
+
+const eyeGeometry = new THREE.SphereGeometry(0.12, 16, 16);
+const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x111111 });
+const handGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+const foodGeometry = new THREE.SphereGeometry(0.35, 12, 12);
+const foodMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0x66cc66, roughness: 0.6, 
+    emissive: 0x22aa22, emissiveIntensity: 0.3 
+});
+
+// ======================================
+// SIMULATION VARIABLES
+// ======================================
+let foods = [];
+let currentFoodAmount = 80;
+let generation = 1;
+
+let isPaused = false;
+let simSpeedMultiplier = 1.0; 
+let nextGenTimeout = null; 
+
+let timeAccumulator = 0;
+let dayTimeElapsed = 0;
+let returnTimeElapsed = 0; 
+let lastFrameTime = performance.now();
+const TIME_STEP = 1000 / 60; 
+let DAY_LENGTH_MS = 15000; 
+const MAX_RETURN_TIME_MS = 8000; 
+let dayPhase = 'hunting'; 
+
+function spawnFood(amount) {
+    for(let i=0; i<amount; i++) {
+        const food = new THREE.Mesh(foodGeometry, foodMaterial);
+        food.castShadow = true;
+        food.position.set((Math.random() - 0.5) * (boardWidth - 4), 0.35, (Math.random() - 0.5) * (boardDepth - 4));
+        scene.add(food); foods.push(food);
+    }
+    document.getElementById('foodCount').innerText = foods.length;
+}
+
+// ======================================
+// AGENT CLASS
+// ======================================
+let agents = [];
+
+class Agent {
+    constructor(x, z, speedInherited, visionInherited) {
+        this.speed = speedInherited || 0.5 + Math.random() * 1.0;
+        this.vision = visionInherited || 12 + Math.random() * 8;
+        this.turnSpeed = 0.08;
+        this.energy = 2000; 
+        this.foodCollected = 0;
+        this.state = "wander";
+        this.target = null;
+        this.targetEdge = null;
+        
+        this.wanderAngle = Math.atan2(-x, -z);
+        this.wanderTimer = 0;
+        this.eatTimer = 0; 
+        this.foodStartPos = null;
+
+        this.mesh = new THREE.Group();
+        const hue = Math.max(0, 0.6 - (this.speed - 0.5) * 0.4);
+        const baseColor = new THREE.Color().setHSL(hue, 0.75, 0.55);
+        
+        const bodyMat = new THREE.MeshStandardMaterial({ 
+            color: baseColor, roughness: 0.5,
+            emissive: baseColor, emissiveIntensity: 0.3
+        });
+        
+        const body = new THREE.Mesh(blobGeometry, bodyMat);
+        body.scale.set(1.2, 1.7, 1.2);
+        body.castShadow = true; body.receiveShadow = true;
+        this.mesh.add(body);
+
+        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial); leftEye.position.set(-0.35, 0.7, 1.15);
+        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial); rightEye.position.set(0.35, 0.7, 1.15);
+        this.mesh.add(leftEye); this.mesh.add(rightEye);
+
+        const mouthGeo = new THREE.SphereGeometry(0.15, 16, 16);
+        this.mouth = new THREE.Mesh(mouthGeo, eyeMaterial);
+        this.mouth.position.set(0, 0.4, 1.25);
+        this.mouth.scale.set(1, 0.1, 0.5); 
+        this.mesh.add(this.mouth);
+
+        this.leftHand = new THREE.Mesh(handGeometry, bodyMat);
+        this.leftHand.position.set(-0.6, 0.4, 0.8);
+        this.leftHand.castShadow = true;
+        this.mesh.add(this.leftHand);
+
+        this.rightHand = new THREE.Mesh(handGeometry, bodyMat);
+        this.rightHand.position.set(0.6, 0.4, 0.8);
+        this.rightHand.castShadow = true;
+        this.mesh.add(this.rightHand);
+
+        this.mesh.position.set(x, 1.7, z);
+        this.mesh.rotation.y = this.wanderAngle;
+        scene.add(this.mesh);
+    }
+
+    applySeparation() {
+        for (const other of agents) {
+            if (other !== this && other.state !== 'dead' && other.state !== 'dying') {
+                const dist = this.mesh.position.distanceTo(other.mesh.position);
+                if (dist < 2.2 && dist > 0) { 
+                    const pushForce = new THREE.Vector3().subVectors(this.mesh.position, other.mesh.position).normalize().multiplyScalar(0.06);
+                    this.mesh.position.add(pushForce);
+                }
+            }
+        }
+    }
+
+    findFood() {
+        let closest = null; let minDist = Infinity;
+        for(const food of foods) {
+            const dist = this.mesh.position.distanceTo(food.position);
+            if(dist < this.vision && dist < minDist) { closest = food; minDist = dist; }
+        }
+        return closest;
+    }
+
+    getNearestEdge() {
+        const limitX = boardWidth / 2 - 1.5; const limitZ = boardDepth / 2 - 1.5;
+        const distToX = limitX - Math.abs(this.mesh.position.x);
+        const distToZ = limitZ - Math.abs(this.mesh.position.z);
+        const spread = (Math.random() - 0.5) * 15; 
+
+        if (distToX < distToZ) {
+            let targetZ = Math.max(-limitZ, Math.min(limitZ, this.mesh.position.z + spread));
+            return new THREE.Vector3(Math.sign(this.mesh.position.x) * limitX, 1.7, targetZ);
+        } else {
+            let targetX = Math.max(-limitX, Math.min(limitX, this.mesh.position.x + spread));
+            return new THREE.Vector3(targetX, 1.7, Math.sign(this.mesh.position.z) * limitZ);
+        }
+    }
+
+    moveToward(targetAngle, speedModifier = 1.0) {
+        let diff = targetAngle - this.mesh.rotation.y;
+        while(diff < -Math.PI) diff += Math.PI * 2;
+        while(diff > Math.PI) diff -= Math.PI * 2;
+        this.mesh.rotation.y += diff * this.turnSpeed;
+
+        const moveSpeed = this.speed * 0.05 * speedModifier;
+        this.mesh.position.x += Math.sin(this.mesh.rotation.y) * moveSpeed;
+        this.mesh.position.z += Math.cos(this.mesh.rotation.y) * moveSpeed;
+        this.energy -= moveSpeed * 0.5;
+
+        this.handleWalls();
+    }
+
+    handleWalls() {
+        const limitX = boardWidth / 2 - 1.5; const limitZ = boardDepth / 2 - 1.5;
+        const pos = this.mesh.position;
+        if(pos.x > limitX || pos.x < -limitX || pos.z > limitZ || pos.z < -limitZ) {
+            this.wanderAngle = Math.atan2(-pos.x, -pos.z);
+            pos.x = Math.max(-limitX, Math.min(limitX, pos.x));
+            pos.z = Math.max(-limitZ, Math.min(limitZ, pos.z));
+        }
+    }
+
+    update() {
+        if (this.state === 'dead') return;
+
+        if (this.state === 'dying') {
+            this.mesh.scale.multiplyScalar(0.85); 
+            this.mesh.children[0].material.color.lerp(new THREE.Color(0x333333), 0.15); 
+            this.mesh.children[0].material.emissiveIntensity = 0; 
+            if (this.mesh.scale.y < 0.05) {
+                this.state = 'dead';
+                scene.remove(this.mesh);
+            }
+            return; 
+        }
+
+        if (this.state === 'eating') {
+            this.applySeparation(); 
+            this.handleWalls();
+            
+            this.eatTimer++;
+            const animLength = 40; 
+            const p = this.eatTimer / animLength; 
+            
+            if (p < 0.3) {
+                const reachP = p / 0.3;
+                this.leftHand.position.x = THREE.MathUtils.lerp(-0.6, this.foodStartPos.x - 0.3, reachP);
+                this.leftHand.position.y = THREE.MathUtils.lerp(0.4, this.foodStartPos.y, reachP);
+                this.leftHand.position.z = THREE.MathUtils.lerp(0.8, this.foodStartPos.z, reachP);
+                
+                this.rightHand.position.x = THREE.MathUtils.lerp(0.6, this.foodStartPos.x + 0.3, reachP);
+                this.rightHand.position.y = THREE.MathUtils.lerp(0.4, this.foodStartPos.y, reachP);
+                this.rightHand.position.z = THREE.MathUtils.lerp(0.8, this.foodStartPos.z, reachP);
+
+            } else if (p < 0.7) {
+                const liftP = (p - 0.3) / 0.4;
+                this.mouth.scale.y = THREE.MathUtils.lerp(0.1, 1.5, liftP); 
+                
+                this.target.position.x = THREE.MathUtils.lerp(this.foodStartPos.x, 0, liftP);
+                this.target.position.y = THREE.MathUtils.lerp(this.foodStartPos.y, 0.4, liftP);
+                this.target.position.z = THREE.MathUtils.lerp(this.foodStartPos.z, 1.25, liftP);
+                
+                this.leftHand.position.x = this.target.position.x - 0.3;
+                this.leftHand.position.y = this.target.position.y;
+                this.leftHand.position.z = this.target.position.z;
+                this.rightHand.position.x = this.target.position.x + 0.3;
+                this.rightHand.position.y = this.target.position.y;
+                this.rightHand.position.z = this.target.position.z;
+
+            } else if (p <= 1.0) {
+                const chompP = (p - 0.7) / 0.3;
+                this.target.scale.setScalar(Math.max(0.01, 1 - chompP)); 
+                this.mouth.scale.y = THREE.MathUtils.lerp(1.5, 0.1, chompP); 
+                
+                this.leftHand.position.x = THREE.MathUtils.lerp(-0.3, -0.6, chompP);
+                this.leftHand.position.y = THREE.MathUtils.lerp(0.4, 0.4, chompP);
+                this.leftHand.position.z = THREE.MathUtils.lerp(1.25, 0.8, chompP);
+                
+                this.rightHand.position.x = THREE.MathUtils.lerp(0.3, 0.6, chompP);
+                this.rightHand.position.y = THREE.MathUtils.lerp(0.4, 0.4, chompP);
+                this.rightHand.position.z = THREE.MathUtils.lerp(1.25, 0.8, chompP);
+            } else {
+                this.mesh.remove(this.target); 
+                this.foodCollected++;
+                this.energy += 300;
+                this.target = null;
+                this.state = 'wander';
+                
+                this.leftHand.position.set(-0.6, 0.4, 0.8);
+                this.rightHand.position.set(0.6, 0.4, 0.8);
+                this.mouth.scale.y = 0.1;
+            }
+            return; 
+        }
+
+        this.applySeparation();
+        this.handleWalls(); 
+
+        if (this.foodCollected >= 2 && (this.state === 'wander' || this.state === 'hunt')) {
+            this.state = 'full';
+            this.targetEdge = this.getNearestEdge();
+        }
+        
+        if (this.energy <= 0 && this.state !== 'home' && this.state !== 'full' && this.state !== 'returning') {
+            this.state = 'tired';
+        } else if (this.energy > 50 && this.state === 'tired') {
+            this.state = 'wander';
+        }
+        
+        if (this.state === 'full' || this.state === 'returning') {
+            const dir = new THREE.Vector3().subVectors(this.targetEdge, this.mesh.position);
+            if (dir.length() < 2.0) {
+                this.state = 'home';
+            } else {
+                this.moveToward(Math.atan2(dir.x, dir.z), 0.7); 
+            }
+        } 
+        else if (this.state === 'home') {
+            let targetRot = Math.atan2(-this.mesh.position.x, -this.mesh.position.z);
+            let diff = targetRot - this.mesh.rotation.y;
+            while(diff < -Math.PI) diff += Math.PI * 2;
+            while(diff > Math.PI) diff -= Math.PI * 2;
+            this.mesh.rotation.y += diff * 0.1;
+        }
+        else if (this.state === 'tired') {
+            this.energy += 1; 
+            this.wanderTimer++;
+            if(this.wanderTimer > 60) { this.wanderAngle += (Math.random() - 0.5) * 1.5; this.wanderTimer = 0; }
+            this.moveToward(this.wanderAngle, 0.2); 
+        }
+        else {
+            let seenFood = this.findFood();
+            if(seenFood) { this.target = seenFood; this.state = "hunt"; }
+            else { this.state = "wander"; }
+
+            if(this.state === "wander") {
+                this.wanderTimer++;
+                if(this.wanderTimer > 60) {
+                    this.wanderAngle += (Math.random() - 0.5) * 1.5;
+                    this.wanderTimer = 0;
+                }
+                this.moveToward(this.wanderAngle, 0.6); 
+            }
+            else if(this.state === "hunt") {
+                if(!this.target || !foods.includes(this.target)) {
+                    this.state = "wander";
+                } else {
+                    const dir = new THREE.Vector3().subVectors(this.target.position, this.mesh.position);
+                    const dist = dir.length();
+                    
+                    if(dist < 2.2) {
+                        const foodIdx = foods.indexOf(this.target);
+                        if (foodIdx > -1) {
+                            foods.splice(foodIdx, 1);
+                            document.getElementById('foodCount').innerText = foods.length;
+                            
+                            this.state = 'eating';
+                            this.eatTimer = 0;
+                            
+                            this.mesh.attach(this.target); 
+                            this.foodStartPos = this.target.position.clone(); 
+                        } else {
+                            this.target = null;
+                            this.state = 'wander';
+                        }
+                    } else {
+                        this.moveToward(Math.atan2(dir.x, dir.z), 1.0); 
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ======================================
+// NATURAL SELECTION LOGIC
+// ======================================
+function getEdgeSpawnPos() {
+    const edge = Math.floor(Math.random() * 4); let x, z;
+    if (edge === 0) { x = -boardWidth/2 + 2; z = (Math.random() - 0.5) * (boardDepth - 4); }
+    else if (edge === 1) { x = boardWidth/2 - 2; z = (Math.random() - 0.5) * (boardDepth - 4); }
+    else if (edge === 2) { z = -boardDepth/2 + 2; x = (Math.random() - 0.5) * (boardWidth - 4); }
+    else { z = boardDepth/2 - 2; x = (Math.random() - 0.5) * (boardWidth - 4); }
+    return {x, z};
+}
+
+function updateUIDisplay() {
+    document.getElementById('genCount').innerText = generation;
+    document.getElementById('dayBannerCount').innerText = generation; 
+    document.getElementById('popCount').innerText = agents.filter(a => a.state !== 'dead' && a.state !== 'dying').length;
+}
+
+function startNextGeneration() {
+    const nextPopulation = [];
+    
+    agents.forEach(creature => {
+        if (creature.state === 'home' || creature.state === 'returning' || creature.state === 'full') { 
+            nextPopulation.push(new Agent(creature.mesh.position.x, creature.mesh.position.z, creature.speed, creature.vision));
+            
+            if (creature.foodCollected >= 2) {
+                const mutatedSpeed = Math.max(0.2, creature.speed + (Math.random() * 0.2 - 0.1));
+                const mutatedVision = Math.max(5, creature.vision + (Math.random() * 2 - 1));
+                
+                const babyX = creature.mesh.position.x + (Math.random() - 0.5) * 2;
+                const babyZ = creature.mesh.position.z + (Math.random() - 0.5) * 2;
+                nextPopulation.push(new Agent(babyX, babyZ, mutatedSpeed, mutatedVision));
+            }
+        }
+        scene.remove(creature.mesh); 
+    });
+
+    agents = nextPopulation;
+
+    if (agents.length === 0) {
+        updateUIDisplay();
+        foods.forEach(f => scene.remove(f)); foods = []; 
+        document.getElementById('foodCount').innerText = "0";
+        dayPhase = 'extinct';
+        isPaused = true;
+
+        const pauseBtn = document.getElementById('btnPause');
+        pauseBtn.innerText = "EXTINCT (Restart)";
+        pauseBtn.style.background = "#555";
+        pauseBtn.style.pointerEvents = "none";
+        return; 
+    }
+
+    generation++; 
+    updateUIDisplay();
+
+    foods.forEach(f => scene.remove(f)); foods = []; 
+    spawnFood(currentFoodAmount);
+    
+    dayPhase = 'hunting';
+    dayTimeElapsed = 0;
+    returnTimeElapsed = 0;
+    timeAccumulator = 0;
+}
+
+// INITIAL START
+spawnFood(currentFoodAmount);
+for(let i=0; i<40; i++) {
+    const pos = getEdgeSpawnPos();
+    agents.push(new Agent(pos.x, pos.z, null, null));
+}
+updateUIDisplay();
+
+// ======================================
+// UI EVENT LISTENERS
+// ======================================
+document.getElementById('inputSpeed').addEventListener('change', (e) => {
+    simSpeedMultiplier = parseFloat(e.target.value) || 1.0;
+});
+
+document.getElementById('inputAutoSpeed').addEventListener('change', (e) => {
+    controls.autoRotateSpeed = parseFloat(e.target.value) || 2.0;
+});
+
+document.getElementById('btnRestart').addEventListener('click', () => {
+    const newPop = parseInt(document.getElementById('inputPop').value) || 40;
+    currentFoodAmount = parseInt(document.getElementById('inputFood').value) || 80;
+    
+    const newDayLen = parseInt(document.getElementById('inputDay').value) || 15;
+    DAY_LENGTH_MS = Math.max(1, Math.min(60, newDayLen)) * 1000;
+
+    agents.forEach(c => scene.remove(c.mesh)); agents = [];
+    foods.forEach(f => scene.remove(f)); foods = [];
+
+    generation = 1; 
+    dayPhase = 'hunting'; 
+    dayTimeElapsed = 0;
+    returnTimeElapsed = 0;
+    timeAccumulator = 0;
+    isPaused = false;
+    
+    const pauseBtn = document.getElementById('btnPause');
+    pauseBtn.innerText = "Pause Sim";
+    pauseBtn.style.background = "#e6b800";
+    pauseBtn.style.pointerEvents = "auto"; 
+
+    if (nextGenTimeout) clearTimeout(nextGenTimeout);
+
+    spawnFood(currentFoodAmount);
+    for(let i=0; i<newPop; i++) {
+        const pos = getEdgeSpawnPos();
+        agents.push(new Agent(pos.x, pos.z, null, null));
+    }
+    updateUIDisplay();
+});
+
+document.getElementById('btnPause').addEventListener('click', () => {
+    if (dayPhase === 'extinct') return;
+
+    isPaused = !isPaused;
+    const btn = document.getElementById('btnPause');
+    if (isPaused) {
+        btn.innerText = "Resume Sim";
+        btn.style.background = "#cc6666"; 
+    } else {
+        btn.innerText = "Pause Sim";
+        btn.style.background = "#e6b800"; 
+        lastFrameTime = performance.now(); 
+    }
+});
+
+document.getElementById('btnSkip').addEventListener('click', () => {
+    if (dayPhase === 'hunting') {
+        dayTimeElapsed = DAY_LENGTH_MS; 
+        if (isPaused) document.getElementById('btnPause').click();
+    } else if (dayPhase === 'returning') {
+        dayPhase = 'nextGen'; 
+        if (nextGenTimeout) clearTimeout(nextGenTimeout);
+        startNextGeneration();
+    }
+});
+
+document.getElementById('btnAutoRotate').addEventListener('click', () => {
+    controls.autoRotate = !controls.autoRotate;
+    document.getElementById('btnAutoRotate').innerText = controls.autoRotate ? "Auto Rotate: ON" : "Auto Rotate: OFF";
+    document.getElementById('btnAutoRotate').style.background = controls.autoRotate ? "#66cc66" : "#ff9933";
+});
+
+document.getElementById('btnRotate').addEventListener('click', () => {
+    const x = camera.position.x;
+    const z = camera.position.z;
+    const angle = Math.PI / 4; 
+    camera.position.x = x * Math.cos(angle) - z * Math.sin(angle);
+    camera.position.z = x * Math.sin(angle) + z * Math.cos(angle);
+    camera.lookAt(0,0,0);
+});
+
+// ======================================
+// FIXED-STEP ANIMATION LOOP
+// ======================================
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+
+    const now = performance.now();
+    let delta = now - lastFrameTime;
+    lastFrameTime = now;
+
+    // --- VISUAL DAY/NIGHT CYCLE & NEW NIGHTTIME FIXES ---
+    let timeFraction = 0;
+    if (dayPhase === 'hunting' || dayPhase === 'returning' || dayPhase === 'nextGen') {
+        timeFraction = Math.min(dayTimeElapsed / DAY_LENGTH_MS, 1.0);
+    } else if (dayPhase === 'extinct') {
+        timeFraction = Math.min(dayTimeElapsed / DAY_LENGTH_MS, 1.0); 
+    }
+
+    const timeBar = document.getElementById('time-bar-fill');
+    if(timeBar) {
+        timeBar.style.width = (timeFraction * 100) + '%';
+        if (timeFraction < 0.5) timeBar.style.backgroundColor = '#ffcc00'; 
+        else if (timeFraction < 0.8) timeBar.style.backgroundColor = '#ff6600'; 
+        else timeBar.style.backgroundColor = '#4444ff'; 
+    }
+
+    const sunRadius = 50;
+    const sunAngle = Math.PI - (timeFraction * Math.PI); 
+    sun.position.x = Math.cos(sunAngle) * sunRadius;
+    sun.position.y = Math.sin(sunAngle) * sunRadius + 10; 
+
+    let ambientIntensity = 0.7;
+    let sunIntensity = 0.6;
+    let moonIntensity = 0;
+    let boardGlow = 0;
+    let neonOpacity = 0;
+
+    if (timeFraction < 0.5) { 
+        const t = timeFraction * 2;
+        scene.background.lerpColors(colorMorning, colorMidday, t);
+        ambientIntensity = 0.7;
+        sunIntensity = 0.6;
+    } else if (timeFraction < 0.8) { 
+        const t = (timeFraction - 0.5) / 0.3;
+        scene.background.lerpColors(colorMidday, colorSunset, t);
+        ambientIntensity = 0.7 - (0.3 * t);
+        sunIntensity = 0.6 - (0.2 * t);
+        
+        // As the sun gets lower, fade in the neon and board glow
+        if (t > 0.5) {
+            const nightT = (t - 0.5) / 0.5;
+            moonIntensity = 0.2 * nightT;
+            boardGlow = 0.05 * nightT;
+            neonOpacity = 0.5 * nightT;
+        }
+    } else { 
+        const t = (timeFraction - 0.8) / 0.2;
+        scene.background.lerpColors(colorSunset, colorNight, t);
+        ambientIntensity = 0.4 - (0.2 * t); 
+        sunIntensity = 0.4 - (0.4 * t);     
+        
+        // Full night intensities
+        moonIntensity = 0.2 + (0.2 * t); // Ramps to 0.4
+        boardGlow = 0.05 + (0.15 * t);   // Ramps to 0.2
+        neonOpacity = 0.5 + (0.5 * t);   // Ramps to 1.0
+    }
+
+    ambientLight.intensity = ambientIntensity;
+    sun.intensity = sunIntensity;
+    moonLight.intensity = moonIntensity;
+    boardMaterial.emissiveIntensity = boardGlow;
+    neonMaterial.opacity = neonOpacity;
+
+    if (!isPaused && dayPhase !== 'extinct') {
+        if (delta > 250) delta = 250; 
+        timeAccumulator += delta * simSpeedMultiplier;
+
+        while (timeAccumulator >= TIME_STEP) {
+            
+            if (dayPhase === 'hunting') {
+                dayTimeElapsed += TIME_STEP;
+                let activeHunters = false;
+
+                agents.forEach(agent => {
+                    if (agent.state !== 'dying') agent.update();
+                    if (agent.state !== 'home' && agent.state !== 'dead') activeHunters = true;
+                });
+
+                if (dayTimeElapsed >= DAY_LENGTH_MS || (!activeHunters && foods.length > 0) || foods.length === 0) {
+                    dayPhase = 'returning';
+                    returnTimeElapsed = 0; 
+                    agents.forEach(c => {
+                        if (c.state === 'eating') {
+                            if(c.target) c.mesh.remove(c.target);
+                            c.target = null;
+                            c.leftHand.position.set(-0.6, 0.4, 0.8);
+                            c.rightHand.position.set(0.6, 0.4, 0.8);
+                        }
+                        c.mouth.scale.y = 0.1; 
+                        
+                        if (c.foodCollected === 0) {
+                            c.state = 'dying'; 
+                        } else if (c.state !== 'home' && c.state !== 'full') {
+                            c.state = 'returning';
+                            c.targetEdge = c.getNearestEdge();
+                        }
+                    });
+                }
+            } 
+            else if (dayPhase === 'returning') {
+                returnTimeElapsed += TIME_STEP; 
+
+                if (dayTimeElapsed < DAY_LENGTH_MS) {
+                    dayTimeElapsed += TIME_STEP * 4; 
+                }
+
+                let allHome = true;
+                agents.forEach(agent => {
+                    if (agent.state !== 'dead') {
+                        agent.update(); 
+                        if (agent.state !== 'home' && agent.state !== 'dying') allHome = false;
+                    }
+                });
+
+                if (allHome || returnTimeElapsed >= MAX_RETURN_TIME_MS) {
+                    dayPhase = 'nextGen';
+                    nextGenTimeout = setTimeout(startNextGeneration, 500);
+                    timeAccumulator = 0; 
+                    break; 
+                }
+            }
+
+            agents.forEach(agent => {
+                if (agent.state !== 'dead' && agent.state !== 'dying') {
+                    const t = now * 0.004 * simSpeedMultiplier;
+                    agent.mesh.scale.y = 1 + Math.sin(t + agent.speed) * 0.03;
+                }
+            });
+
+            timeAccumulator -= TIME_STEP;
+            updateUIDisplay();
+        }
+    }
+
+    renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+</script>
+</body>
+</html>

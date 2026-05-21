@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Agent Simulator</title>
+<title>Natural Selection Simulator</title>
 
 <style>
 body { margin: 0; overflow: hidden; background: #87CEEB; font-family: sans-serif; }
@@ -15,10 +15,7 @@ canvas { display: block; }
     border: 1px solid #444; pointer-events: none;
     z-index: 10;
 }
-.sub-text {
-    font-size: 14px; color: #ccc; margin-top: 8px;
-    display: flex; gap: 15px;
-}
+.sub-text { font-size: 14px; color: #ccc; margin-top: 8px; display: flex; gap: 15px; }
 
 /* Top Middle Day Banner */
 #day-banner {
@@ -30,71 +27,87 @@ canvas { display: block; }
     display: flex; flex-direction: column; align-items: center; min-width: 180px;
     z-index: 10;
 }
-#time-bar-container {
-    width: 100%; height: 6px; background: #222; margin-top: 8px; 
-    border-radius: 3px; overflow: hidden; position: relative;
-}
-#time-bar-fill {
-    width: 0%; height: 100%; background: #ffcc00; 
-    transition: width 0.1s linear, background-color 0.5s;
-}
+#time-bar-container { width: 100%; height: 6px; background: #222; margin-top: 8px; border-radius: 3px; overflow: hidden; position: relative; }
+#time-bar-fill { width: 0%; height: 100%; background: #ffcc00; transition: width 0.1s linear, background-color 0.5s; }
 
-/* Top Right Rules Button Box */
-#rules-box-trigger {
-    position: absolute; top: 15px; right: 15px;
-    z-index: 10;
+/* Top Right Buttons */
+#top-right-controls {
+    position: absolute; top: 15px; right: 15px; z-index: 10;
+    display: flex; flex-direction: column; gap: 10px;
 }
-#btnRules {
-    background: rgba(0, 0, 0, 0.7); color: #00ffff; border: 1px solid #00ffff;
-    padding: 10px 16px; font-size: 15px; font-weight: bold; border-radius: 6px;
+.top-btn {
+    background: rgba(0, 0, 0, 0.7); border-radius: 6px;
+    padding: 10px 16px; font-size: 14px; font-weight: bold; 
     cursor: pointer; transition: all 0.2s;
 }
+#btnRules { color: #00ffff; border: 1px solid #00ffff; }
 #btnRules:hover { background: #00ffff; color: #111; box-shadow: 0 0 10px #00ffff; }
 
-/* Rules Overlay Modal Window */
-#rulesModal {
+#btnGraphs { color: #ffaa00; border: 1px solid #ffaa00; }
+#btnGraphs:hover { background: #ffaa00; color: #111; box-shadow: 0 0 10px #ffaa00; }
+
+/* Modals */
+.modal {
     display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 500px; max-width: 90%; background: rgba(15, 15, 26, 0.95); color: #fff;
-    padding: 25px; border-radius: 12px; border: 1px solid #555;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7); z-index: 100;
+    background: rgba(15, 15, 26, 0.95); color: #fff; padding: 25px; 
+    border-radius: 12px; border: 1px solid #555; box-shadow: 0 10px 30px rgba(0,0,0,0.7); z-index: 100;
 }
-#rulesModal h2 { margin-top: 0; color: #66cc66; border-bottom: 1px solid #444; padding-bottom: 8px; }
-#rulesModal ul { padding-left: 20px; line-height: 1.6; font-size: 14px; }
-#rulesModal li { margin-bottom: 8px; }
-#btnCloseRules {
-    margin-top: 15px; float: right; padding: 6px 14px; background: #cc6666;
+#rulesModal { width: 550px; max-width: 90%; }
+#graphModal { width: 95vw; height: 85vh; display: none; flex-direction: column; }
+
+h2 { margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 8px; }
+#rulesModal h2 { color: #66cc66; }
+#graphModal h2 { color: #ffaa00; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;}
+
+ul { padding-left: 20px; line-height: 1.6; font-size: 14px; }
+li { margin-bottom: 8px; }
+
+.close-btn {
+    padding: 6px 14px; background: #cc6666;
     color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
 }
-#btnCloseRules:hover { background: #ff7777; }
+.close-btn:hover { background: #ff7777; }
+
+/* Graph Dashboard Grid */
+#chartGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 20px;
+    flex-grow: 1;
+    min-height: 0; 
+}
+.chart-box {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.chart-wrapper {
+    flex-grow: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
 
 /* Bottom Center Control Panel */
 #control-panel {
     position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: rgba(0,0,0,0.8); padding: 15px 20px; border-radius: 10px;
     border: 1px solid #555; color: white; display: flex; flex-direction: column; gap: 12px;
-    font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    z-index: 10;
+    font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10;
 }
-.control-row {
-    display: flex; justify-content: center; align-items: center; gap: 15px;
-}
-.control-group {
-    display: flex; align-items: center; gap: 6px;
-}
-input[type="number"], select {
-    padding: 4px; border-radius: 4px; border: 1px solid #777;
-    background: #333; color: white; text-align: center; font-weight: bold;
-}
+.control-row { display: flex; justify-content: center; align-items: center; gap: 15px; }
+.control-group { display: flex; align-items: center; gap: 6px; }
+input[type="number"], select { padding: 4px; border-radius: 4px; border: 1px solid #777; background: #333; color: white; text-align: center; font-weight: bold; }
 select { cursor: pointer; }
 .trait-label { display: flex; align-items: center; gap: 4px; cursor: pointer; font-weight: bold; color: #00ffff; }
 .trait-label input { cursor: pointer; }
-
-button {
-    padding: 8px 12px; background: #66cc66; color: #111; 
-    border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
-    transition: filter 0.2s;
-}
-button:hover { filter: brightness(1.2); }
+button.ctrl-btn { padding: 8px 12px; background: #66cc66; color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s; }
+button.ctrl-btn:hover { filter: brightness(1.2); }
 #btnPause { background: #e6b800; width: 110px; } 
 #btnSkip { background: #4da6ff; } 
 #btnAutoRotate { background: #ff9933; width: 130px; }
@@ -103,11 +116,12 @@ button:hover { filter: brightness(1.2); }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <div id="stats-panel">
-    <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Evolution Sandbox</div>
+    <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Natural Selection</div>
     <div>Pop: <b id="popCount" style="color:white;">60</b> | Food: <b id="foodCount" style="color:white;">120</b></div>
     <div class="sub-text">
         <span>Generation: <b id="genCount" style="color:white;">1</b></span>
@@ -116,29 +130,55 @@ button:hover { filter: brightness(1.2); }
 
 <div id="day-banner">
     <div>Day <span id="dayBannerCount">1</span></div>
-    <div id="time-bar-container">
-        <div id="time-bar-fill"></div>
-    </div>
+    <div id="time-bar-container"><div id="time-bar-fill"></div></div>
 </div>
 
-<div id="rules-box-trigger">
-    <button id="btnRules">Simulation Rules</button>
+<div id="top-right-controls">
+    <button id="btnRules" class="top-btn">Simulation Rules</button>
+    <button id="btnGraphs" class="top-btn">Live Data Dash</button>
 </div>
 
-<div id="rulesModal">
+<div id="rulesModal" class="modal">
     <h2>Simulation Core Rules</h2>
     <ul>
-        <li><b>Foraging Rules:</b> Creatures emerge from random edge points every morning to search for green energy pellets scattered across the arena.</li>
-        <li><b>Natural Selection Conditions:</b>
-            <br>• <b>0 Pellets:</b> Blob starves, turns gray, shrivels up, and dies.
-            <br>• <b>1 Pellet:</b> Blob survives the generation and carries on to the next day.
-            <br>• <b>2 Pellets:</b> Blob clones itself, producing an offspring mutated tracking trait values.
+        <li><b>Foraging Rules:</b> Creatures emerge from the edges every morning to search for green energy pellets.</li>
+        <li><b>Natural Selection:</b>
+            <br>• <b>0 Pellets:</b> Blob starves and dies.
+            <br>• <b>1 Pellet:</b> Blob survives to the next day.
+            <br>• <b>2 Pellets:</b> Blob clones itself, producing an offspring with mutated traits.
+        </li>
+        <li><b>Speed Color Spectrum:</b> Blob colors represent their Speed trait across a continuous spectrum matching Primer's scale:
+            <br>• <span style="color: #ff33cc;">Pink/Purple</span>: Slowest (~0.5x speed)
+            <br>• <span style="color: #00ffff;">Teal/Blue</span>: Average (~1.0x speed)
+            <br>• <span style="color: #ffaa00;">Orange/Yellow</span>: Fast (~1.5x speed)
+            <br>• <span style="color: #ff3333;">Red</span>: Fastest (2.0x+ speed)
         </li>
         <li><b>Speed Mechanic:</b> Faster acceleration lets blobs beat others to food but uses exponential energy proportional to <b>Speed²</b>.</li>
         <li><b>Size Mechanic:</b> Blobs at least <b>20% larger</b> can aggressively hunt and eat smaller agents for meat. Size heavily escalates stationary energy drain as <b>Size³</b>.</li>
         <li><b>Sense Mechanic:</b> Greater vision radius grants long-range targeting efficiency but charges a permanent base tax matching the field range value.</li>
     </ul>
-    <button id="btnCloseRules">Close Menu</button>
+    <button id="btnCloseRules" class="close-btn" style="float: right;">Close</button>
+</div>
+
+<div id="graphModal" class="modal">
+    <h2>
+        Evolutionary Data Dashboard
+        <button id="btnCloseGraphs" class="close-btn">Close Dashboard</button>
+    </h2>
+    <div id="chartGrid">
+        <div class="chart-box">
+            <h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Color-Mapped Speed Distribution</h4>
+            <div class="chart-wrapper"><canvas id="chartHist"></canvas></div>
+        </div>
+        <div class="chart-box">
+            <h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Population Over Time (N)</h4>
+            <div class="chart-wrapper"><canvas id="chartPop"></canvas></div>
+        </div>
+        <div class="chart-box">
+            <h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Average Traits Over Time</h4>
+            <div class="chart-wrapper"><canvas id="chartTraits"></canvas></div>
+        </div>
+    </div>
 </div>
 
 <div id="control-panel">
@@ -146,9 +186,9 @@ button:hover { filter: brightness(1.2); }
         <div class="control-group">
             <label>Plate Size:</label>
             <select id="selectSize">
-                <option value="1">1x (Small)</option>
-                <option value="2">2x (Medium)</option>
-                <option value="3" selected>3x (Large)</option>
+                <option value="1">1x</option>
+                <option value="2">2x</option>
+                <option value="3" selected>3x</option>
             </select>
         </div>
         <label>Start Pop: <input type="number" id="inputPop" value="60" min="2" max="400"></label>
@@ -165,18 +205,121 @@ button:hover { filter: brightness(1.2); }
     </div>
 
     <div class="control-row">
-        <button id="btnRestart">Apply & Restart Sim</button>
-        <button id="btnPause">Pause Sim</button>
-        <button id="btnSkip">Force End Day</button>
+        <button id="btnRestart" class="ctrl-btn">Apply & Restart Sim</button>
+        <button id="btnPause" class="ctrl-btn">Pause Sim</button>
+        <button id="btnSkip" class="ctrl-btn">Force End Day</button>
     </div>
     <div class="control-row" style="border-top: 1px solid #444; padding-top: 12px;">
-        <button id="btnRotate">Step Rotate 45°</button>
-        <button id="btnAutoRotate">Auto Rotate: OFF</button>
+        <button id="btnRotate" class="ctrl-btn">Step Rotate 45°</button>
+        <button id="btnAutoRotate" class="ctrl-btn">Auto Rotate: OFF</button>
         <label>Auto Speed: <input type="number" id="inputAutoSpeed" value="2.0" step="0.5"></label>
     </div>
 </div>
 
 <script>
+// ======================================
+// DATA TRACKING ENGINE (CHART.JS)
+// ======================================
+let simHistory = { days: [1], pop: [60], speed: [1.0], size: [1.0], sense: [15.0] };
+let chartsInitialized = false;
+let chartPop, chartTraits, chartHist;
+
+Chart.defaults.color = '#aaaaaa';
+Chart.defaults.font.family = 'sans-serif';
+
+function calculateHistogramData() {
+    const binCount = 15;
+    const minS = 0.5, maxS = 2.0;
+    const binSize = (maxS - minS) / binCount;
+    let counts = new Array(binCount).fill(0);
+    let labels = [];
+    let colors = [];
+
+    for(let i=0; i<binCount; i++) {
+        let center = minS + (i + 0.5) * binSize;
+        labels.push(center.toFixed(2));
+        
+        let speedT = (center - 0.5) / 1.5; 
+        let hueVal = 0.85 * (1.0 - speedT);
+        colors.push(`hsl(${hueVal * 360}, 75%, 55%)`);
+    }
+
+    agents.forEach(a => {
+        let s = Math.max(minS, Math.min(a.speed, maxS - 0.001));
+        let idx = Math.floor((s - minS) / binSize);
+        counts[idx]++;
+    });
+
+    return { labels, counts, colors };
+}
+
+
+function initCharts() {
+    if (chartsInitialized) return;
+    
+    // 1. Population Line Chart
+    chartPop = new Chart(document.getElementById('chartPop').getContext('2d'), {
+        type: 'line',
+        data: { labels: simHistory.days, datasets: [{ label: 'Total Population', data: simHistory.pop, borderColor: '#4da6ff', backgroundColor: 'rgba(77, 166, 255, 0.2)', fill: true, tension: 0.1 }] },
+        options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
+    });
+
+    // 2. Average Traits Line Chart
+    chartTraits = new Chart(document.getElementById('chartTraits').getContext('2d'), {
+        type: 'line',
+        data: { 
+            labels: simHistory.days, 
+            datasets: [
+                { label: 'Avg Speed', data: simHistory.speed, borderColor: '#ffaa00', tension: 0.1 },
+                { label: 'Avg Size', data: simHistory.size, borderColor: '#ff33cc', tension: 0.1 }
+            ] 
+        },
+        options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true, max: 2.5 } } }
+    });
+
+    // 3. Colored Histogram (Bar Chart)
+    const histData = calculateHistogramData();
+    chartHist = new Chart(document.getElementById('chartHist').getContext('2d'), {
+        type: 'bar',
+        data: { labels: histData.labels, datasets: [{ label: 'Agent Count', data: histData.counts, backgroundColor: histData.colors, borderWidth: 1, borderColor: '#111' }] },
+        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 200 }, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+    });
+
+    chartsInitialized = true;
+}
+
+function updateCharts() {
+    if (!chartsInitialized) return;
+    
+    chartPop.data.labels = simHistory.days;
+    chartPop.data.datasets[0].data = simHistory.pop;
+    chartPop.update();
+
+    chartTraits.data.labels = simHistory.days;
+    chartTraits.data.datasets[0].data = simHistory.speed;
+    chartTraits.data.datasets[1].data = simHistory.size;
+    chartTraits.update();
+
+    const histData = calculateHistogramData();
+    chartHist.data.datasets[0].data = histData.counts;
+    chartHist.data.datasets[0].backgroundColor = histData.colors;
+    chartHist.update();
+}
+
+function recordEndOfDayStats() {
+    if (agents.length === 0) return;
+    let tSp = 0, tSz = 0, tSe = 0;
+    agents.forEach(a => { tSp += a.speed; tSz += a.size; tSe += a.vision; });
+    
+    simHistory.days.push(generation);
+    simHistory.pop.push(agents.length);
+    simHistory.speed.push(tSp / agents.length);
+    simHistory.size.push(tSz / agents.length);
+    simHistory.sense.push(tSe / agents.length);
+    
+    if (document.getElementById('graphModal').style.display === 'flex') updateCharts();
+}
+
 // ======================================
 // SCENE, CAMERA & ORBIT CONTROLS
 // ======================================
@@ -266,7 +409,6 @@ function buildDynamicBoard(factor) {
     
     scene.add(boardMesh);
 
-    // SAFETY FIX: Verify the shadow camera exists before dynamically updating it
     if (sun.shadow && sun.shadow.camera) {
         sun.shadow.camera.left = -boardWidth/1.2; sun.shadow.camera.right = boardWidth/1.2;
         sun.shadow.camera.top = boardDepth/1.2; sun.shadow.camera.bottom = -boardDepth/1.2;
@@ -282,13 +424,20 @@ function buildDynamicBoard(factor) {
 buildDynamicBoard(3);
 
 // ======================================
-// GEOMETRIES & ASSET BLUEPRINTS
+// EGG SHAPE GENERATOR
 // ======================================
 const blobGeometry = new THREE.SphereGeometry(1, 32, 32);
 const positions = blobGeometry.attributes.position;
 for(let i=0; i<positions.count; i++) {
     const y = positions.getY(i);
-    const scale = 1.0 - (y * 0.15); 
+    let scale = 1.0;
+    
+    if (y > 0) {
+        scale = 1.0 - (y * 0.4); 
+    } else {
+        scale = 1.0 + Math.abs(y * 0.15); // Bottom heavy
+    }
+    
     positions.setX(i, positions.getX(i) * scale);
     positions.setZ(i, positions.getZ(i) * scale);
 }
@@ -301,7 +450,7 @@ const foodGeometry = new THREE.SphereGeometry(0.35, 12, 12);
 const foodMaterial = new THREE.MeshStandardMaterial({ color: 0x66cc66, roughness: 0.6, emissive: 0x22aa22, emissiveIntensity: 0.3 });
 
 // ======================================
-// TIME STATE TRACKING
+// SIMULATION VARIABLES
 // ======================================
 let foods = [];
 let currentFoodAmount = 120;
@@ -355,8 +504,11 @@ class Agent {
         this.foodStartPos = null;
 
         this.mesh = new THREE.Group();
-        const hue = Math.max(0, 0.6 - (this.speed - 0.5) * 0.4);
-        const baseColor = new THREE.Color().setHSL(hue, 0.75, 0.55);
+        
+        let clampedSpeed = Math.max(0.5, Math.min(this.speed, 2.0));
+        let speedT = (clampedSpeed - 0.5) / 1.5; 
+        let hueVal = 0.85 * (1.0 - speedT);
+        const baseColor = new THREE.Color().setHSL(hueVal, 0.75, 0.55);
         
         const bodyMat = new THREE.MeshStandardMaterial({ 
             color: baseColor, roughness: 0.5,
@@ -364,33 +516,36 @@ class Agent {
         });
         
         const body = new THREE.Mesh(blobGeometry, bodyMat);
-        body.scale.set(1.2 * this.size, 1.7 * this.size, 1.2 * this.size);
+        body.scale.set(this.size, 1.5 * this.size, this.size);
         body.castShadow = true; body.receiveShadow = true;
         this.mesh.add(body);
 
-        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial); leftEye.position.set(-0.35*this.size, 0.7*this.size, 1.15*this.size);
-        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial); rightEye.position.set(0.35*this.size, 0.7*this.size, 1.15*this.size);
+        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial); leftEye.position.set(-0.25*this.size, 0.75*this.size, 0.72*this.size);
+        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial); rightEye.position.set(0.25*this.size, 0.75*this.size, 0.72*this.size);
         this.mesh.add(leftEye); this.mesh.add(rightEye);
 
         const mouthGeo = new THREE.SphereGeometry(0.15*this.size, 16, 16);
         this.mouth = new THREE.Mesh(mouthGeo, eyeMaterial);
-        this.mouth.position.set(0, 0.4*this.size, 1.25*this.size);
+        this.mouth.position.set(0, 0.15*this.size, 0.96*this.size);
         this.mouth.scale.set(1, 0.1, 0.5); 
+        this.mouth.visible = false;
         this.mesh.add(this.mouth);
 
         this.leftHand = new THREE.Mesh(handGeometry, bodyMat);
         this.leftHand.scale.setScalar(this.size);
-        this.leftHand.position.set(-0.6*this.size, 0.4*this.size, 0.8*this.size);
+        this.leftHand.position.set(-0.7*this.size, 0.3*this.size, 0.8*this.size);
         this.leftHand.castShadow = true;
+        this.leftHand.visible = false;
         this.mesh.add(this.leftHand);
 
         this.rightHand = new THREE.Mesh(handGeometry, bodyMat);
         this.rightHand.scale.setScalar(this.size);
-        this.rightHand.position.set(0.6*this.size, 0.4*this.size, 0.8*this.size);
+        this.rightHand.position.set(0.7*this.size, 0.3*this.size, 0.8*this.size);
         this.rightHand.castShadow = true;
+        this.rightHand.visible = false;
         this.mesh.add(this.rightHand);
 
-        this.mesh.position.set(x, 1.7 * this.size, z);
+        this.mesh.position.set(x, 1.5 * this.size, z);
         this.mesh.rotation.y = this.wanderAngle;
         scene.add(this.mesh);
     }
@@ -433,7 +588,6 @@ class Agent {
                 }
             }
         }
-        
         return closest;
     }
 
@@ -445,10 +599,10 @@ class Agent {
 
         if (distToX < distToZ) {
             let targetZ = Math.max(-limitZ, Math.min(limitZ, this.mesh.position.z + spread));
-            return new THREE.Vector3(Math.sign(this.mesh.position.x) * limitX, 1.7 * this.size, targetZ);
+            return new THREE.Vector3(Math.sign(this.mesh.position.x) * limitX, 1.5 * this.size, targetZ);
         } else {
             let targetX = Math.max(-limitX, Math.min(limitX, this.mesh.position.x + spread));
-            return new THREE.Vector3(targetX, 1.7 * this.size, Math.sign(this.mesh.position.z) * limitZ);
+            return new THREE.Vector3(targetX, 1.5 * this.size, Math.sign(this.mesh.position.z) * limitZ);
         }
     }
 
@@ -464,7 +618,6 @@ class Agent {
         
         const movementCost = Math.pow(this.size, 3) * Math.pow(this.speed, 2) * 1.5;
         this.energy -= movementCost;
-
         this.handleWalls();
     }
 
@@ -499,29 +652,23 @@ class Agent {
             this.handleWalls();
             
             this.eatTimer++;
-            const p = this.eatTimer / 40; 
-            const sz = this.size;
             
+            if (this.eatTimer === 1) {
+                this.mouth.visible = true;
+                this.leftHand.visible = true;
+                this.rightHand.visible = true;
+            }
+            
+            const p = this.eatTimer / 30; 
+            const sz = this.size;
             const targetMesh = this.target.isAgent ? this.target.mesh : this.target;
             
-            if (p < 0.3) {
-                const reachP = p / 0.3;
-                this.leftHand.position.x = THREE.MathUtils.lerp(-0.6*sz, this.foodStartPos.x - 0.3, reachP);
-                this.leftHand.position.y = THREE.MathUtils.lerp(0.4*sz, this.foodStartPos.y, reachP);
-                this.leftHand.position.z = THREE.MathUtils.lerp(0.8*sz, this.foodStartPos.z, reachP);
-                
-                this.rightHand.position.x = THREE.MathUtils.lerp(0.6*sz, this.foodStartPos.x + 0.3, reachP);
-                this.rightHand.position.y = THREE.MathUtils.lerp(0.4*sz, this.foodStartPos.y, reachP);
-                this.rightHand.position.z = THREE.MathUtils.lerp(0.8*sz, this.foodStartPos.z, reachP);
-
-            } else if (p < 0.7) {
-                const liftP = (p - 0.3) / 0.4;
-                this.mouth.scale.y = THREE.MathUtils.lerp(0.1, 1.5, liftP); 
-                
+            if (p <= 1.0) {
                 if (targetMesh) {
-                    targetMesh.position.x = THREE.MathUtils.lerp(this.foodStartPos.x, 0, liftP);
-                    targetMesh.position.y = THREE.MathUtils.lerp(this.foodStartPos.y, 0.4*sz, liftP);
-                    targetMesh.position.z = THREE.MathUtils.lerp(this.foodStartPos.z, 1.25*sz, liftP);
+                    targetMesh.scale.setScalar(Math.max(0.01, 1 - p)); 
+                    targetMesh.position.x = THREE.MathUtils.lerp(this.foodStartPos.x, 0, p);
+                    targetMesh.position.y = THREE.MathUtils.lerp(this.foodStartPos.y, 0.15*sz, p);
+                    targetMesh.position.z = THREE.MathUtils.lerp(this.foodStartPos.z, 0.8*sz, p);
                     
                     this.leftHand.position.x = targetMesh.position.x - 0.3;
                     this.leftHand.position.y = targetMesh.position.y;
@@ -529,29 +676,22 @@ class Agent {
                     this.rightHand.position.x = targetMesh.position.x + 0.3;
                     this.rightHand.position.y = targetMesh.position.y;
                     this.rightHand.position.z = targetMesh.position.z;
+                    
+                    this.mouth.scale.y = 0.1 + Math.sin(p * Math.PI) * 1.5;
                 }
-            } else if (p <= 1.0) {
-                const chompP = (p - 0.7) / 0.3;
-                if (targetMesh) targetMesh.scale.setScalar(Math.max(0.01, 1 - chompP)); 
-                this.mouth.scale.y = THREE.MathUtils.lerp(1.5, 0.1, chompP); 
-                
-                this.leftHand.position.x = THREE.MathUtils.lerp(-0.3*sz, -0.6*sz, chompP);
-                this.leftHand.position.y = THREE.MathUtils.lerp(0.4*sz, 0.4*sz, chompP);
-                this.leftHand.position.z = THREE.MathUtils.lerp(1.25*sz, 0.8*sz, chompP);
-                
-                this.rightHand.position.x = THREE.MathUtils.lerp(0.3*sz, 0.6*sz, chompP);
-                this.rightHand.position.y = THREE.MathUtils.lerp(0.4*sz, 0.4*sz, chompP);
-                this.rightHand.position.z = THREE.MathUtils.lerp(1.25*sz, 0.8*sz, chompP);
             } else {
                 if (targetMesh) this.mesh.remove(targetMesh); 
-                
                 this.foodCollected++;
                 this.energy += (this.target.isAgent ? 1000 : 300); 
                 this.target = null;
                 this.state = 'wander';
                 
-                this.leftHand.position.set(-0.6*sz, 0.4*sz, 0.8*sz);
-                this.rightHand.position.set(0.6*sz, 0.4*sz, 0.8*sz);
+                this.mouth.visible = false;
+                this.leftHand.visible = false;
+                this.rightHand.visible = false;
+                
+                this.leftHand.position.set(-0.7*sz, 0.3*sz, 0.8*sz);
+                this.rightHand.position.set(0.7*sz, 0.3*sz, 0.8*sz);
                 this.mouth.scale.y = 0.1;
             }
             return; 
@@ -619,7 +759,6 @@ class Agent {
                         this.mesh.position
                     );
                     const dist = dir.length();
-                    
                     const grabDist = this.target.isAgent ? (this.size + this.target.size) : (this.size * 2.2);
 
                     if(dist < grabDist) {
@@ -627,7 +766,6 @@ class Agent {
                             this.target.state = 'dying'; 
                             this.state = 'eating';
                             this.eatTimer = 0;
-                            
                             this.mesh.attach(this.target.mesh);
                             this.foodStartPos = this.target.mesh.position.clone();
                         } else {
@@ -635,10 +773,8 @@ class Agent {
                             if (foodIdx > -1) {
                                 foods.splice(foodIdx, 1);
                                 document.getElementById('foodCount').innerText = foods.length;
-                                
                                 this.state = 'eating';
                                 this.eatTimer = 0;
-                                
                                 this.mesh.attach(this.target); 
                                 this.foodStartPos = this.target.position.clone(); 
                             } else {
@@ -674,10 +810,13 @@ function updateUIDisplay() {
 }
 
 function startNextGeneration() {
+    recordEndOfDayStats(); 
+
     const nextPopulation = [];
     
     agents.forEach(creature => {
-        if (creature.state === 'home' || creature.state === 'returning' || creature.state === 'full') { 
+        // Bug Fix: Only agents that are home OR have 1+ food and positive energy survive forced ends.
+        if (creature.state === 'home' || creature.state === 'returning' || creature.state === 'full' || (creature.foodCollected >= 1 && creature.energy > 0)) { 
             
             nextPopulation.push(new Agent(creature.mesh.position.x, creature.mesh.position.z, creature.speed, creature.vision, creature.size));
             
@@ -736,6 +875,13 @@ updateUIDisplay();
 document.getElementById('btnRules').addEventListener('click', () => { document.getElementById('rulesModal').style.display = 'block'; });
 document.getElementById('btnCloseRules').addEventListener('click', () => { document.getElementById('rulesModal').style.display = 'none'; });
 
+document.getElementById('btnGraphs').addEventListener('click', () => { 
+    document.getElementById('graphModal').style.display = 'flex';
+    initCharts();
+    updateCharts();
+});
+document.getElementById('btnCloseGraphs').addEventListener('click', () => { document.getElementById('graphModal').style.display = 'none'; });
+
 document.getElementById('inputSpeed').addEventListener('change', (e) => { simSpeedMultiplier = parseFloat(e.target.value) || 1.0; });
 document.getElementById('inputAutoSpeed').addEventListener('change', (e) => { controls.autoRotateSpeed = parseFloat(e.target.value) || 2.0; });
 
@@ -755,6 +901,10 @@ document.getElementById('btnRestart').addEventListener('click', () => {
 
     agents.forEach(c => scene.remove(c.mesh)); agents = [];
     foods.forEach(f => scene.remove(f)); foods = [];
+
+    // Reset History for new sim
+    simHistory = { days: [1], pop: [newPop], speed: [1.0], size: [1.0], sense: [15.0] };
+    if(chartsInitialized) updateCharts();
 
     generation = 1; 
     dayPhase = 'hunting'; 
@@ -787,8 +937,17 @@ document.getElementById('btnPause').addEventListener('click', () => {
 });
 
 document.getElementById('btnSkip').addEventListener('click', () => {
-    if (dayPhase === 'hunting') { dayTimeElapsed = DAY_LENGTH_MS; if (isPaused) document.getElementById('btnPause').click(); } 
-    else if (dayPhase === 'returning') { dayPhase = 'nextGen'; if (nextGenTimeout) clearTimeout(nextGenTimeout); startNextGeneration(); }
+    if (dayPhase === 'hunting') { 
+        // Bug Fix: Only drain energy for the time that actually passed, instead of the full day, to prevent force-end starvation.
+        let remainingTime = DAY_LENGTH_MS - dayTimeElapsed;
+        dayTimeElapsed = DAY_LENGTH_MS; 
+        if (isPaused) document.getElementById('btnPause').click(); 
+    } 
+    else if (dayPhase === 'returning') { 
+        dayPhase = 'nextGen'; 
+        if (nextGenTimeout) clearTimeout(nextGenTimeout); 
+        startNextGeneration(); 
+    }
 });
 
 document.getElementById('btnAutoRotate').addEventListener('click', () => {
@@ -841,7 +1000,6 @@ function animate() {
     let boardGlow = 0;
     let neonOpacity = 0;
 
-    // FIX: Replaced lerpColors() with universally supported .copy().lerp() to prevent version crashes
     if (timeFraction < 0.5) { 
         const t = timeFraction * 2;
         scene.background.copy(colorMorning).lerp(colorMidday, t);
@@ -889,8 +1047,11 @@ function animate() {
                         if (c.state === 'eating') {
                             if(c.target) { if (c.target.isAgent) scene.remove(c.target.mesh); else c.mesh.remove(c.target); }
                             c.target = null;
-                            c.leftHand.position.set(-0.6*c.size, 0.4*c.size, 0.8*c.size);
-                            c.rightHand.position.set(0.6*c.size, 0.4*c.size, 0.8*c.size);
+                            c.mouth.visible = false;
+                            c.leftHand.visible = false;
+                            c.rightHand.visible = false;
+                            c.leftHand.position.set(-0.7*c.size, 0.3*c.size, 0.8*c.size);
+                            c.rightHand.position.set(0.7*c.size, 0.3*c.size, 0.8*c.size);
                         }
                         c.mouth.scale.y = 0.1; 
                         if (c.foodCollected === 0) { c.state = 'dying'; } 

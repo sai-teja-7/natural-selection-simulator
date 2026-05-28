@@ -8,110 +8,76 @@
 body { margin: 0; overflow: hidden; background: #87CEEB; font-family: sans-serif; }
 canvas { display: block; }
 
-/* Top Left Stats Panel */
-#stats-panel {
-    position: absolute; top: 15px; left: 15px; color: white;
-    background: rgba(0,0,0,0.6); padding: 12px 18px; border-radius: 8px; font-size: 16px;
-    border: 1px solid #444; pointer-events: none;
-    z-index: 10;
-}
+/* Top Panels */
+#stats-panel { position: absolute; top: 15px; left: 15px; color: white; background: rgba(0,0,0,0.6); padding: 12px 18px; border-radius: 8px; font-size: 16px; border: 1px solid #444; pointer-events: none; z-index: 10; }
 .sub-text { font-size: 14px; color: #ccc; margin-top: 8px; display: flex; gap: 15px; }
-
-/* Top Middle Day Banner */
-#day-banner {
-    position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.8); color: white; padding: 12px 24px;
-    border-radius: 8px; font-size: 22px; font-weight: bold; letter-spacing: 2px;
-    text-transform: uppercase; border: 1px solid #555; pointer-events: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    display: flex; flex-direction: column; align-items: center; min-width: 180px;
-    z-index: 10;
-}
+#day-banner { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 12px 24px; border-radius: 8px; font-size: 22px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; border: 1px solid #555; pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; min-width: 180px; z-index: 10; }
 #time-bar-container { width: 100%; height: 6px; background: #222; margin-top: 8px; border-radius: 3px; overflow: hidden; position: relative; }
 #time-bar-fill { width: 0%; height: 100%; background: #ffcc00; transition: width 0.1s linear, background-color 0.5s; }
-
-/* Top Right Buttons */
-#top-right-controls {
-    position: absolute; top: 15px; right: 15px; z-index: 10;
-    display: flex; flex-direction: column; gap: 10px;
-}
-.top-btn {
-    background: rgba(0, 0, 0, 0.7); border-radius: 6px;
-    padding: 10px 16px; font-size: 14px; font-weight: bold; 
-    cursor: pointer; transition: all 0.2s;
-}
-#btnRules { color: #00ffff; border: 1px solid #00ffff; }
-#btnRules:hover { background: #00ffff; color: #111; box-shadow: 0 0 10px #00ffff; }
-
-#btnGraphs { color: #ffaa00; border: 1px solid #ffaa00; }
-#btnGraphs:hover { background: #ffaa00; color: #111; box-shadow: 0 0 10px #ffaa00; }
+#top-right-controls { position: absolute; top: 15px; right: 15px; z-index: 10; display: flex; flex-direction: column; gap: 10px; }
+.top-btn { background: rgba(0, 0, 0, 0.7); border-radius: 6px; padding: 10px 16px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s; color: #ffaa00; border: 1px solid #ffaa00; }
+.top-btn:hover { background: #ffaa00; color: #111; box-shadow: 0 0 10px #ffaa00; }
 
 /* Modals */
-.modal {
-    display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: rgba(15, 15, 26, 0.95); color: #fff; padding: 25px; 
-    border-radius: 12px; border: 1px solid #555; box-shadow: 0 10px 30px rgba(0,0,0,0.7); z-index: 100;
-}
-#rulesModal { width: 550px; max-width: 90%; }
+.modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15, 15, 26, 0.95); color: #fff; padding: 25px; border-radius: 12px; border: 1px solid #555; box-shadow: 0 10px 30px rgba(0,0,0,0.7); z-index: 1000; }
 #graphModal { width: 95vw; height: 85vh; display: none; flex-direction: column; }
-
 h2 { margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 8px; }
-#rulesModal h2 { color: #66cc66; }
 #graphModal h2 { color: #ffaa00; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;}
-
-ul { padding-left: 20px; line-height: 1.6; font-size: 14px; }
-li { margin-bottom: 8px; }
-
-.close-btn {
-    padding: 6px 14px; background: #cc6666;
-    color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
-}
+.close-btn { padding: 6px 14px; background: #cc6666; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
 .close-btn:hover { background: #ff7777; }
+#chartGrid { display: grid; grid-template-columns: 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 20px; flex-grow: 1; min-height: 0; }
+.chart-box { background: rgba(0,0,0,0.5); border: 1px solid #333; border-radius: 8px; padding: 10px; position: relative; display: flex; flex-direction: column; }
+.chart-wrapper { flex-grow: 1; position: relative; width: 100%; height: 100%; }
 
-/* Graph Dashboard Grid */
-#chartGrid {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    gap: 20px;
-    flex-grow: 1;
-    min-height: 0; 
-}
-.chart-box {
-    background: rgba(0,0,0,0.5);
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 10px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-.chart-wrapper {
-    flex-grow: 1;
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
+/* UI Columns System */
+.ui-column { position: absolute; top: 120px; bottom: 130px; width: 320px; display: flex; flex-direction: column; gap: 15px; pointer-events: none; z-index: 100; }
+#left-col { left: 15px; }
+#right-col { right: 15px; }
 
-/* Bottom Center Control Panel */
-#control-panel {
-    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.8); padding: 15px 20px; border-radius: 10px;
-    border: 1px solid #555; color: white; display: flex; flex-direction: column; gap: 12px;
-    font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10;
+/* Floating Panels Standard Style */
+.floating-panel { pointer-events: auto; background: rgba(15, 15, 25, 0.9); border: 1px solid #555; color: white; padding: 15px; border-radius: 10px; font-family: sans-serif; box-shadow: 0px 4px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column; min-height: 0; transition: all 0.3s ease; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
+.panel-content { display: flex; flex-direction: column; gap: 10px; font-size: 13px; overflow-y: auto; padding-right: 5px; min-height: 0; }
+.min-btn { background: none; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 16px; margin-left: 8px;}
+.min-btn:hover { color: #aaa; }
+.input-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; }
+.input-row label { width: 70%; }
+.input-row input { width: 30%; }
+
+/* AI Panel 3-Tier Maximization Logic */
+#ai-panel.maximized {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    bottom: auto !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) !important;
+    width: 60vw !important;
+    height: 75vh !important;
+    z-index: 2000 !important;
+    border: 2px solid #d689ff;
 }
-.control-row { display: flex; justify-content: center; align-items: center; gap: 15px; }
+#ai-panel.maximized .panel-content { height: 100%; max-height: none; }
+#ai-panel.maximized #ai-trend-output { flex-grow: 1; max-height: none; font-size: 15px; padding: 20px; }
+
+/* Horizontal Full-Width Control Panel */
+#control-panel { 
+    position: absolute; bottom: 0; left: 0; width: 100%; 
+    background: rgba(12, 12, 18, 0.95); padding: 8px 20px; border-radius: 0; 
+    border-top: 2px solid #555; color: white; display: flex; flex-direction: column; gap: 8px; font-size: 13px; 
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.6); z-index: 1000; box-sizing: border-box;
+}
+.control-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 4px; }
+#control-panel-content { display: flex; flex-direction: row; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; width: 100%; }
+.control-row { display: flex; justify-content: center; align-items: center; gap: 10px; border-right: 1px solid #444; padding-right: 15px; }
+.control-row:last-child { border-right: none; padding-right: 0; }
 .control-group { display: flex; align-items: center; gap: 6px; }
-input[type="number"], select { padding: 4px; border-radius: 4px; border: 1px solid #777; background: #333; color: white; text-align: center; font-weight: bold; }
-select { cursor: pointer; }
+input[type="number"], select { padding: 4px; border-radius: 4px; border: 1px solid #777; background: #333; color: white; text-align: center; font-weight: bold; font-size: 12px; }
+select { cursor: pointer; padding: 2px; }
 .trait-label { display: flex; align-items: center; gap: 4px; cursor: pointer; font-weight: bold; color: #00ffff; }
 .trait-label input { cursor: pointer; }
-button.ctrl-btn { padding: 8px 12px; background: #66cc66; color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s; }
+button.ctrl-btn { padding: 8px 12px; background: #66cc66; color: #111; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: filter 0.2s; white-space: nowrap; font-size: 12px; }
 button.ctrl-btn:hover { filter: brightness(1.2); }
-#btnPause { background: #e6b800; width: 110px; } 
-#btnSkip { background: #4da6ff; } 
-#btnAutoRotate { background: #ff9933; width: 130px; }
-#btnRotate { background: #b366ff; }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -123,9 +89,7 @@ button.ctrl-btn:hover { filter: brightness(1.2); }
 <div id="stats-panel">
     <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">Natural Selection</div>
     <div>Pop: <b id="popCount" style="color:white;">60</b> | Food: <b id="foodCount" style="color:white;">120</b></div>
-    <div class="sub-text">
-        <span>Generation: <b id="genCount" style="color:white;">1</b></span>
-    </div>
+    <div class="sub-text"><span>Generation: <b id="genCount" style="color:white;">1</b></span></div>
 </div>
 
 <div id="day-banner">
@@ -134,348 +98,258 @@ button.ctrl-btn:hover { filter: brightness(1.2); }
 </div>
 
 <div id="top-right-controls">
-    <button id="btnRules" class="top-btn">Simulation Rules</button>
     <button id="btnGraphs" class="top-btn">Live Data Dash</button>
 </div>
 
-<div id="rulesModal" class="modal">
-    <h2>Simulation Core Rules</h2>
-    <ul>
-        <li><b>Foraging Rules:</b> Creatures emerge from the edges every morning to search for green energy pellets.</li>
-        <li><b>Natural Selection:</b>
-            <br>• <b>0 Pellets:</b> Blob starves and dies.
-            <br>• <b>1 Pellet:</b> Blob survives to the next day.
-            <br>• <b>2 Pellets:</b> Blob clones itself, producing an offspring with mutated traits.
-        </li>
-        <li><b>Speed Color Spectrum:</b> Blob colors represent their Speed trait across a continuous spectrum matching Primer's scale:
-            <br>• <span style="color: #ff33cc;">Pink/Purple</span>: Slowest (~0.5x speed)
-            <br>• <span style="color: #00ffff;">Teal/Blue</span>: Average (~1.0x speed)
-            <br>• <span style="color: #ffaa00;">Orange/Yellow</span>: Fast (~1.5x speed)
-            <br>• <span style="color: #ff3333;">Red</span>: Fastest (2.0x+ speed)
-        </li>
-        <li><b>Speed Mechanic:</b> Faster acceleration lets blobs beat others to food but uses exponential energy proportional to <b>Speed²</b>.</li>
-        <li><b>Size Mechanic:</b> Blobs at least <b>20% larger</b> can aggressively hunt and eat smaller agents for meat. Size heavily escalates stationary energy drain as <b>Size³</b>.</li>
-        <li><b>Sense Mechanic:</b> Greater vision radius grants long-range targeting efficiency but charges a permanent base tax matching the field range value.</li>
-    </ul>
-    <button id="btnCloseRules" class="close-btn" style="float: right;">Close</button>
+<div id="extinctModal" class="modal" style="text-align: center; width: 450px; border-top: 4px solid #ff3333; background: rgba(10, 5, 5, 0.95);">
+    <h1 style="color: #ff3333; font-size: 3em; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px;">Extinct</h1>
+    <p style="color: #ccc; margin-top: 0; font-size: 14px;">The ecosystem has entirely collapsed.</p>
+    
+    <div id="extinct-ai-output" style="background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px; color: #f1c40f; margin-bottom: 25px; text-align: left; line-height: 1.6; font-size: 13px; border-left: 4px solid #8e44ad; max-height: 200px; overflow-y: auto;">
+        🤖 The AI is reviewing the history to see why everyone died...
+    </div>
+    
+    <button id="btnExtinctRestart" class="ctrl-btn" style="font-size: 16px; padding: 12px 35px; background: #ffaa00; width: 100%;">Restart Simulation</button>
+</div>
+
+<div id="left-col" class="ui-column">
+    <div id="rules-panel" class="floating-panel" style="border-top: 3px solid #66cc66;">
+        <div class="panel-header"><h3 style="margin:0; color:#66cc66;">⚙️ Simulation Rules</h3><button class="min-btn toggle-btn" data-target="rules-content">_</button></div>
+        <div id="rules-content" class="panel-content">
+            <div class="input-row"><label title="Food required to not starve">Food to Survive:</label><input type="number" id="ruleFoodSurvive" value="1" min="0"></div>
+            <div class="input-row"><label title="Food required to clone">Food to Clone:</label><input type="number" id="ruleFoodClone" value="2" min="1"></div>
+            <div class="input-row"><label title="Global multiplier for blob speed">Speed Multiplier:</label><input type="number" id="ruleSpeedMult" value="1.0" step="0.1" min="0.1"></div>
+            <div class="input-row"><label title="Global multiplier for vision">Vision Multiplier:</label><input type="number" id="ruleVisionMult" value="1.0" step="0.1" min="0.1"></div>
+            <div class="input-row"><label title="Size advantage needed to eat another blob">Carnivore Size Adv:</label><input type="number" id="ruleCarnAdv" value="1.05" step="0.05" min="1.0"></div>
+            <div class="input-row"><label title="Volatility of babies mutating">Mutation Rate:</label><input type="number" id="ruleMutRate" value="0.2" step="0.1" min="0"></div>
+            
+            <div style="border-top:1px solid #444; margin-top:5px; padding-top:5px;"><b>Energy Economics</b></div>
+            <div class="input-row"><label>Base Starting Energy:</label><input type="number" id="ruleBaseEnergy" value="4000" step="100"></div>
+            <div class="input-row"><label>Energy from Green Pellet:</label><input type="number" id="ruleEnergyFood" value="300" step="50"></div>
+            <div class="input-row"><label>Energy from Eating Blob:</label><input type="number" id="ruleEnergyMeat" value="1000" step="100"></div>
+        </div>
+    </div>
+
+    <div id="concepts-panel" class="floating-panel" style="border-top: 3px solid #3498db;">
+        <div class="panel-header"><h3 style="margin:0; color:#3498db;">📖 Evolutionary Concepts</h3><button class="min-btn toggle-btn" data-target="concepts-content">_</button></div>
+        <div id="concepts-content" class="panel-content" style="color: #ccc; font-size: 12px; line-height: 1.5;">
+            <p style="margin:0;"><b>Natural Selection:</b> Blobs that survive pass on their traits. Blobs with bad traits die out.</p>
+            <p style="margin:0;"><b>Directional Selection:</b> When an extreme trait (like being super fast) is the best way to survive, the whole group slowly becomes super fast over time.</p>
+            <p style="margin:0;"><b>Carrying Capacity:</b> The board only has enough food for a certain number of blobs. When there are too many, the extra ones starve.</p>
+            <p style="margin:0;"><b>Predator/Prey Arms Race:</b> Meat-eaters must be bigger than their targets. This makes the hunted blobs run faster to get away, which forces the meat-eaters to grow even bigger to catch them!</p>
+        </div>
+    </div>
+</div>
+
+<div id="right-col" class="ui-column">
+    <div id="math-panel" class="floating-panel" style="border-top: 3px solid #ff33cc;">
+        <div class="panel-header"><h3 style="margin:0; color:#ff33cc;">🧮 Math & Formulae</h3><button class="min-btn toggle-btn" data-target="math-content">_</button></div>
+        <div id="math-content" class="panel-content">
+            <div style="background:rgba(0,0,0,0.4); padding:8px; border-radius:5px; border-left:3px solid #00ffff;">
+                <b>Speed Tax (Movement Cost)</b><br>
+                <span style="font-size:11px; color:#aaa;">Moving fast requires huge amounts of energy. The faster they go, the exponentially harder it is.</span><br>
+                <code style="color:#00ffff; font-size:12px;">EnergyLoss = (Size³) × (Speed²) × 1.5 × Tax</code>
+                <div class="input-row" style="margin-top:5px;"><label>Speed Tax Multiplier:</label><input type="number" id="ruleSpeedTax" value="1.5" step="0.1"></div>
+            </div>
+            <div style="background:rgba(0,0,0,0.4); padding:8px; border-radius:5px; border-left:3px solid #ffaa00;">
+                <b>Size Tax (Metabolic Cost)</b><br>
+                <span style="font-size:11px; color:#aaa;">Big blobs burn energy just by existing. Giant predators must hunt constantly.</span><br>
+                <code style="color:#ffaa00; font-size:12px;">EnergyLoss = (Size²) × 0.2 × Tax</code>
+                <div class="input-row" style="margin-top:5px;"><label>Size Tax Multiplier:</label><input type="number" id="ruleSizeTax" value="1.0" step="0.1"></div>
+            </div>
+            <div style="background:rgba(0,0,0,0.4); padding:8px; border-radius:5px; border-left:3px solid #b366ff;">
+                <b>Sense Tax (Neural Cost)</b><br>
+                <span style="font-size:11px; color:#aaa;">Seeing further costs a constant drip of energy.</span><br>
+                <code style="color:#b366ff; font-size:12px;">EnergyLoss = VisionRadius × 0.1</code>
+            </div>
+        </div>
+    </div>
+
+    <div id="ai-panel" class="floating-panel" style="border-top: 3px solid #8e44ad;">
+        <div class="panel-header">
+            <h3 style="margin:0; color:#d689ff;">🤖 AI Biologist</h3>
+            <div>
+                <button class="min-btn toggle-btn" data-target="ai-content" title="Minimize/Restore">_</button>
+                <button id="btnMaxAi" class="min-btn" title="Maximize to Center">□</button>
+            </div>
+        </div>
+        <div id="ai-content" class="panel-content">
+            <p style="font-size: 12px; color: #ccc; margin:0;">Let the AI look at the live data and explain how your blobs are surviving and evolving.</p>
+            <button id="btnAiAnalyze" style="width: 100%; padding: 10px; background: #8e44ad; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s;">Analyze Trends</button>
+            <div id="ai-trend-output" style="margin-top: 5px; font-size: 13px; color: #f1c40f; line-height: 1.5; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; display: none; max-height: 250px; overflow-y: auto;"></div>
+        </div>
+    </div>
 </div>
 
 <div id="graphModal" class="modal">
-    <h2>
-        Evolutionary Data Dashboard
-        <button id="btnCloseGraphs" class="close-btn">Close Dashboard</button>
-    </h2>
+    <h2>Evolutionary Data Dashboard<button id="btnCloseGraphs" class="close-btn">Close Dashboard</button></h2>
     <div id="chartGrid">
-        <div class="chart-box">
-            <h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Color-Mapped Speed Distribution</h4>
-            <div class="chart-wrapper"><canvas id="chartHist"></canvas></div>
-        </div>
-        <div class="chart-box">
-            <h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Population Over Time (N)</h4>
-            <div class="chart-wrapper"><canvas id="chartPop"></canvas></div>
-        </div>
-        <div class="chart-box">
-            <h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Average Traits Over Time</h4>
-            <div class="chart-wrapper"><canvas id="chartTraits"></canvas></div>
-        </div>
+        <div class="chart-box"><h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Color-Mapped Speed Distribution</h4><div class="chart-wrapper"><canvas id="chartHist"></canvas></div></div>
+        <div class="chart-box"><h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Population Over Time (N)</h4><div class="chart-wrapper"><canvas id="chartPop"></canvas></div></div>
+        <div class="chart-box"><h4 style="margin:0 0 10px 0; text-align:center; color:#ccc;">Average Traits Over Time</h4><div class="chart-wrapper"><canvas id="chartTraits"></canvas></div></div>
     </div>
 </div>
 
 <div id="control-panel">
-    <div class="control-row">
-        <div class="control-group">
-            <label>Plate Size:</label>
-            <select id="selectSize">
-                <option value="1">1x</option>
-                <option value="2">2x</option>
-                <option value="3" selected>3x</option>
-            </select>
+    <div class="control-header">
+        <span style="font-weight: bold; color: #66cc66; text-transform: uppercase; letter-spacing: 1px;">🎛️ Simulation Dashboard</span>
+        <button class="min-btn toggle-btn" data-target="control-panel-content">_</button>
+    </div>
+    <div id="control-panel-content">
+        <div class="control-row">
+            <div class="control-group"><label>Plate:</label><select id="selectSize"><option value="1">1x</option><option value="2">2x</option><option value="3" selected>3x</option></select></div>
+            <label>Pop: <input type="number" id="inputPop" value="60" min="2" max="400" style="width:45px;"></label>
+            <label>Food: <input type="number" id="inputFood" value="120" min="10" max="800" style="width:45px;"></label>
         </div>
-        <label>Start Pop: <input type="number" id="inputPop" value="60" min="2" max="400"></label>
-        <label>Daily Food: <input type="number" id="inputFood" value="120" min="10" max="800"></label>
-        <label>Day (s): <input type="number" id="inputDay" value="15" min="1" max="60"></label>
-        <label>Sim Speed: <input type="number" id="inputSpeed" value="1" min="0.1" max="20" step="0.5">x</label>
-    </div>
-    
-    <div class="control-row" style="background: rgba(255,255,255,0.05); padding: 6px; border-radius: 6px; border: 1px dashed #444;">
-        <span style="font-weight: bold; color: #ccc; font-size:12px; text-transform:uppercase; margin-right:5px;">Active Genes:</span>
-        <label class="trait-label"><input type="checkbox" id="chkSpeed" checked> Speed</label>
-        <label class="trait-label"><input type="checkbox" id="chkSize" checked> Size (Carnivory)</label>
-        <label class="trait-label"><input type="checkbox" id="chkSense" checked> Sense</label>
-    </div>
-
-    <div class="control-row">
-        <button id="btnRestart" class="ctrl-btn">Apply & Restart Sim</button>
-        <button id="btnPause" class="ctrl-btn">Pause Sim</button>
-        <button id="btnSkip" class="ctrl-btn">Force End Day</button>
-    </div>
-    <div class="control-row" style="border-top: 1px solid #444; padding-top: 12px;">
-        <button id="btnRotate" class="ctrl-btn">Step Rotate 45°</button>
-        <button id="btnAutoRotate" class="ctrl-btn">Auto Rotate: OFF</button>
-        <label>Auto Speed: <input type="number" id="inputAutoSpeed" value="2.0" step="0.5"></label>
+        <div class="control-row">
+            <label>Day(s): <input type="number" id="inputDay" value="15" min="1" max="60" style="width:40px;"></label>
+            <label>Speed: <input type="number" id="inputSpeed" value="1" min="0.1" max="20" step="0.5" style="width:40px;">x</label>
+        </div>
+        <div class="control-row" style="background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 6px;">
+            <span style="font-weight: bold; color: #ccc; font-size:11px; text-transform:uppercase; margin-right:5px;">Genes:</span>
+            <label class="trait-label"><input type="checkbox" id="chkSpeed" checked> Speed</label>
+            <label class="trait-label"><input type="checkbox" id="chkSize" checked> Size</label>
+            <label class="trait-label"><input type="checkbox" id="chkSense" checked> Sense</label>
+        </div>
+        <div class="control-row">
+            <button id="btnRestart" class="ctrl-btn">Apply & Restart</button>
+            <button id="btnPause" class="ctrl-btn" style="background: #e6b800;">Pause Sim</button>
+            <button id="btnSkip" class="ctrl-btn" style="background: #4da6ff;">Force End Day</button>
+        </div>
+        <div class="control-row">
+            <button id="btnRotate" class="ctrl-btn" style="background: #b366ff; padding: 6px 10px;">⟳ 45°</button>
+            <button id="btnAutoRotate" class="ctrl-btn" style="background: #ff9933; padding: 6px 10px;">Auto Rotate: OFF</button>
+            <label>Rot Speed: <input type="number" id="inputAutoSpeed" value="2.0" step="0.5" style="width:40px;"></label>
+        </div>
     </div>
 </div>
 
 <script>
 // ======================================
+// GLOBAL MATH & RULE VARIABLES
+// ======================================
+window.reqFoodSurvive = 1; window.reqFoodClone = 2; window.speedMult = 1.0; window.visionMult = 1.0;
+window.carnivoreAdvantage = 1.05; window.mutationRate = 0.2; window.baseEnergy = 4000;
+window.energyFood = 300; window.energyMeat = 1000; window.speedTaxMult = 1.5; window.sizeTaxMult = 1.0;
+
+const linkVar = (id, varName) => { document.getElementById(id).addEventListener('input', (e) => { window[varName] = parseFloat(e.target.value) || 0; }); }
+linkVar('ruleFoodSurvive', 'reqFoodSurvive'); linkVar('ruleFoodClone', 'reqFoodClone'); linkVar('ruleSpeedMult', 'speedMult');
+linkVar('ruleVisionMult', 'visionMult'); linkVar('ruleCarnAdv', 'carnivoreAdvantage'); linkVar('ruleMutRate', 'mutationRate');
+linkVar('ruleBaseEnergy', 'baseEnergy'); linkVar('ruleEnergyFood', 'energyFood'); linkVar('ruleEnergyMeat', 'energyMeat');
+linkVar('ruleSpeedTax', 'speedTaxMult'); linkVar('ruleSizeTax', 'sizeTaxMult');
+
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const target = document.getElementById(e.target.getAttribute('data-target'));
+        if (target.style.display === 'none') { target.style.display = 'flex'; e.target.innerText = '_'; } 
+        else { target.style.display = 'none'; e.target.innerText = '□'; }
+    });
+});
+
+// AI Panel Maximize Logic
+const aiPanel = document.getElementById('ai-panel');
+const btnMaxAi = document.getElementById('btnMaxAi');
+let isAiMaximized = false;
+
+btnMaxAi.addEventListener('click', () => {
+    isAiMaximized = !isAiMaximized;
+    if (isAiMaximized) {
+        aiPanel.classList.add('maximized');
+        document.getElementById('ai-content').style.display = 'flex'; // Ensure it's not minimized
+        btnMaxAi.innerText = '🗗'; // Window restore icon
+    } else {
+        aiPanel.classList.remove('maximized');
+        btnMaxAi.innerText = '□'; // Maximize icon
+    }
+});
+
+// ======================================
 // DATA TRACKING ENGINE (CHART.JS)
 // ======================================
 let simHistory = { days: [1], pop: [60], speed: [1.0], size: [1.0], sense: [15.0] };
-let chartsInitialized = false;
-let chartPop, chartTraits, chartHist;
-
-Chart.defaults.color = '#aaaaaa';
-Chart.defaults.font.family = 'sans-serif';
+let chartsInitialized = false; let chartPop, chartTraits, chartHist;
+Chart.defaults.color = '#aaaaaa'; Chart.defaults.font.family = 'sans-serif';
 
 function calculateHistogramData() {
-    const binCount = 15;
-    const minS = 0.5, maxS = 2.0;
-    const binSize = (maxS - minS) / binCount;
-    let counts = new Array(binCount).fill(0);
-    let labels = [];
-    let colors = [];
-
+    const binCount = 15; const minS = 0.5, maxS = 2.0; const binSize = (maxS - minS) / binCount;
+    let counts = new Array(binCount).fill(0); let labels = []; let colors = [];
     for(let i=0; i<binCount; i++) {
-        let center = minS + (i + 0.5) * binSize;
-        labels.push(center.toFixed(2));
-        
-        let speedT = (center - 0.5) / 1.5; 
-        let hueVal = 0.85 * (1.0 - speedT);
-        colors.push(`hsl(${hueVal * 360}, 75%, 55%)`);
+        labels.push((minS + (i + 0.5) * binSize).toFixed(2));
+        colors.push(`hsl(${0.85 * (1.0 - ((minS + (i + 0.5) * binSize - 0.5) / 1.5)) * 360}, 75%, 55%)`);
     }
-
-    agents.forEach(a => {
-        let s = Math.max(minS, Math.min(a.speed, maxS - 0.001));
-        let idx = Math.floor((s - minS) / binSize);
-        counts[idx]++;
-    });
-
+    agents.forEach(a => { counts[Math.floor((Math.max(minS, Math.min(a.speed, maxS - 0.001)) - minS) / binSize)]++; });
     return { labels, counts, colors };
 }
 
-
 function initCharts() {
     if (chartsInitialized) return;
-    
-    // 1. Population Line Chart
-    chartPop = new Chart(document.getElementById('chartPop').getContext('2d'), {
-        type: 'line',
-        data: { labels: simHistory.days, datasets: [{ label: 'Total Population', data: simHistory.pop, borderColor: '#4da6ff', backgroundColor: 'rgba(77, 166, 255, 0.2)', fill: true, tension: 0.1 }] },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } }
-    });
-
-    // 2. Average Traits Line Chart
-    chartTraits = new Chart(document.getElementById('chartTraits').getContext('2d'), {
-        type: 'line',
-        data: { 
-            labels: simHistory.days, 
-            datasets: [
-                { label: 'Avg Speed', data: simHistory.speed, borderColor: '#ffaa00', tension: 0.1 },
-                { label: 'Avg Size', data: simHistory.size, borderColor: '#ff33cc', tension: 0.1 }
-            ] 
-        },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true, max: 2.5 } } }
-    });
-
-    // 3. Colored Histogram (Bar Chart)
+    chartPop = new Chart(document.getElementById('chartPop').getContext('2d'), { type: 'line', data: { labels: simHistory.days, datasets: [{ label: 'Total Population', data: simHistory.pop, borderColor: '#4da6ff', backgroundColor: 'rgba(77, 166, 255, 0.2)', fill: true, tension: 0.1 }] }, options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true } } } });
+    chartTraits = new Chart(document.getElementById('chartTraits').getContext('2d'), { type: 'line', data: { labels: simHistory.days, datasets: [{ label: 'Avg Speed', data: simHistory.speed, borderColor: '#ffaa00', tension: 0.1 }, { label: 'Avg Size', data: simHistory.size, borderColor: '#ff33cc', tension: 0.1 }] }, options: { responsive: true, maintainAspectRatio: false, animation: false, scales: { y: { beginAtZero: true, max: 2.5 } } } });
     const histData = calculateHistogramData();
-    chartHist = new Chart(document.getElementById('chartHist').getContext('2d'), {
-        type: 'bar',
-        data: { labels: histData.labels, datasets: [{ label: 'Agent Count', data: histData.counts, backgroundColor: histData.colors, borderWidth: 1, borderColor: '#111' }] },
-        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 200 }, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
-    });
-
+    chartHist = new Chart(document.getElementById('chartHist').getContext('2d'), { type: 'bar', data: { labels: histData.labels, datasets: [{ label: 'Agent Count', data: histData.counts, backgroundColor: histData.colors, borderWidth: 1, borderColor: '#111' }] }, options: { responsive: true, maintainAspectRatio: false, animation: { duration: 200 }, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } } });
     chartsInitialized = true;
 }
 
 function updateCharts() {
     if (!chartsInitialized) return;
-    
-    chartPop.data.labels = simHistory.days;
-    chartPop.data.datasets[0].data = simHistory.pop;
-    chartPop.update();
-
-    chartTraits.data.labels = simHistory.days;
-    chartTraits.data.datasets[0].data = simHistory.speed;
-    chartTraits.data.datasets[1].data = simHistory.size;
-    chartTraits.update();
-
-    const histData = calculateHistogramData();
-    chartHist.data.datasets[0].data = histData.counts;
-    chartHist.data.datasets[0].backgroundColor = histData.colors;
-    chartHist.update();
+    chartPop.data.labels = simHistory.days; chartPop.data.datasets[0].data = simHistory.pop; chartPop.update();
+    chartTraits.data.labels = simHistory.days; chartTraits.data.datasets[0].data = simHistory.speed; chartTraits.data.datasets[1].data = simHistory.size; chartTraits.update();
+    const histData = calculateHistogramData(); chartHist.data.datasets[0].data = histData.counts; chartHist.data.datasets[0].backgroundColor = histData.colors; chartHist.update();
 }
 
 function recordEndOfDayStats() {
     if (agents.length === 0) return;
     let tSp = 0, tSz = 0, tSe = 0;
     agents.forEach(a => { tSp += a.speed; tSz += a.size; tSe += a.vision; });
-    
-    simHistory.days.push(generation);
-    simHistory.pop.push(agents.length);
-    simHistory.speed.push(tSp / agents.length);
-    simHistory.size.push(tSz / agents.length);
-    simHistory.sense.push(tSe / agents.length);
-    
+    simHistory.days.push(generation); simHistory.pop.push(agents.length); simHistory.speed.push(tSp / agents.length); simHistory.size.push(tSz / agents.length); simHistory.sense.push(tSe / agents.length);
     if (document.getElementById('graphModal').style.display === 'flex') updateCharts();
 }
 
 // ======================================
-// SCENE, CAMERA & ORBIT CONTROLS
+// SCENE & GRAPHICS SETUP
 // ======================================
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x87CEEB); 
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x87CEEB); 
+const colorMorning = new THREE.Color(0x87CEEB); const colorMidday = new THREE.Color(0x4FA9E6); const colorSunset = new THREE.Color(0xFF6B4A); const colorNight = new THREE.Color(0x0a0a1a);   
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-document.body.appendChild(renderer.domElement);
+const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; document.body.appendChild(renderer.domElement);
+const controls = new THREE.OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.dampingFactor = 0.05; controls.maxPolarAngle = Math.PI / 2 - 0.05; controls.minDistance = 10; controls.maxDistance = 800; controls.autoRotate = false; controls.autoRotateSpeed = 2.0;
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); scene.add(ambientLight);
+const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.castShadow = true; sun.shadow.bias = -0.001; sun.shadow.normalBias = 0.02; scene.add(sun);
+const moonLight = new THREE.HemisphereLight(0x4466cc, 0x111122, 0.0); scene.add(moonLight);
 
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; 
-controls.dampingFactor = 0.05;
-controls.maxPolarAngle = Math.PI / 2 - 0.05; 
-controls.minDistance = 10; 
-controls.maxDistance = 800;
-controls.autoRotate = false;
-controls.autoRotateSpeed = 2.0;
-
-// ======================================
-// DYNAMIC LIGHTING
-// ======================================
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-scene.add(ambientLight);
-
-const sun = new THREE.DirectionalLight(0xffffff, 0.6);
-sun.castShadow = true;
-sun.shadow.bias = -0.001;
-sun.shadow.normalBias = 0.02; 
-scene.add(sun);
-
-const moonLight = new THREE.HemisphereLight(0x4466cc, 0x111122, 0.0); 
-scene.add(moonLight);
-
-const colorMorning = new THREE.Color(0x87CEEB); 
-const colorMidday = new THREE.Color(0x4FA9E6);  
-const colorSunset = new THREE.Color(0xFF6B4A);  
-const colorNight = new THREE.Color(0x0a0a1a);   
-
-// ======================================
-// RECONFIGURABLE SYSTEM STATE
-// ======================================
-let boardWidth = 135; 
-let boardDepth = 105; 
-let cornerRadius = 9;
-let boardMesh = null;
-let neonEdgesMesh = null;
+let boardWidth = 135; let boardDepth = 105; let cornerRadius = 9; let boardMesh = null; let neonEdgesMesh = null;
 const boardMaterial = new THREE.MeshStandardMaterial({ color: 0xf2f2f2, roughness: 0.8, metalness: 0.1, emissive: 0x113355, emissiveIntensity: 0.0 });
 const neonMaterial = new THREE.LineBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.0 });
 
-let configUseSpeed = true;
-let configUseSize = true;
-let configUseSense = true;
+let configUseSpeed = true; let configUseSize = true; let configUseSense = true;
 
 function buildDynamicBoard(factor) {
-    if (boardMesh) scene.remove(boardMesh);
-    
-    boardWidth = 45 * factor;
-    boardDepth = 35 * factor;
-    cornerRadius = 3 * factor;
-    
+    if (boardMesh) scene.remove(boardMesh); boardWidth = 45 * factor; boardDepth = 35 * factor; cornerRadius = 3 * factor;
     const shape = new THREE.Shape();
-    shape.moveTo(-boardWidth/2 + cornerRadius, -boardDepth/2); 
-    shape.lineTo(boardWidth/2 - cornerRadius, -boardDepth/2); 
-    shape.quadraticCurveTo(boardWidth/2, -boardDepth/2, boardWidth/2, -boardDepth/2 + cornerRadius); 
-    shape.lineTo(boardWidth/2, boardDepth/2 - cornerRadius); 
-    shape.quadraticCurveTo(boardWidth/2, boardDepth/2, boardWidth/2 - cornerRadius, boardDepth/2); 
-    shape.lineTo(-boardWidth/2 + cornerRadius, boardDepth/2); 
-    shape.quadraticCurveTo(-boardWidth/2, boardDepth/2, -boardWidth/2, boardDepth/2 - cornerRadius); 
-    shape.lineTo(-boardWidth/2, -boardDepth/2 + cornerRadius); 
-    shape.quadraticCurveTo(-boardWidth/2, -boardDepth/2, -boardWidth/2 + cornerRadius, -boardDepth/2);
-
+    shape.moveTo(-boardWidth/2 + cornerRadius, -boardDepth/2); shape.lineTo(boardWidth/2 - cornerRadius, -boardDepth/2); shape.quadraticCurveTo(boardWidth/2, -boardDepth/2, boardWidth/2, -boardDepth/2 + cornerRadius); shape.lineTo(boardWidth/2, boardDepth/2 - cornerRadius); shape.quadraticCurveTo(boardWidth/2, boardDepth/2, boardWidth/2 - cornerRadius, boardDepth/2); shape.lineTo(-boardWidth/2 + cornerRadius, boardDepth/2); shape.quadraticCurveTo(-boardWidth/2, boardDepth/2, -boardWidth/2, boardDepth/2 - cornerRadius); shape.lineTo(-boardWidth/2, -boardDepth/2 + cornerRadius); shape.quadraticCurveTo(-boardWidth/2, -boardDepth/2, -boardWidth/2 + cornerRadius, -boardDepth/2);
     const extrudeSettings = { depth: 0.1, bevelEnabled: true, bevelSegments: 4, steps: 1, bevelSize: 0.4, bevelThickness: 0.4 };
-    const boardGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings); 
-    boardGeometry.rotateX(-Math.PI / 2); 
-    boardGeometry.translate(0, -0.4, 0); 
-
-    boardMesh = new THREE.Mesh(boardGeometry, boardMaterial); 
-    boardMesh.receiveShadow = true; 
-
-    const edgesGeometry = new THREE.EdgesGeometry(boardGeometry, 15);
-    neonEdgesMesh = new THREE.LineSegments(edgesGeometry, neonMaterial);
-    boardMesh.add(neonEdgesMesh); 
-    
-    scene.add(boardMesh);
-
-    if (sun.shadow && sun.shadow.camera) {
-        sun.shadow.camera.left = -boardWidth/1.2; sun.shadow.camera.right = boardWidth/1.2;
-        sun.shadow.camera.top = boardDepth/1.2; sun.shadow.camera.bottom = -boardDepth/1.2;
-        sun.shadow.camera.updateProjectionMatrix();
-    }
-
-    if(factor === 1) camera.position.set(0, 45, 55);
-    else if(factor === 2) camera.position.set(0, 85, 100);
-    else camera.position.set(0, 120, 140);
-    controls.target.set(0,0,0);
+    const boardGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings); boardGeometry.rotateX(-Math.PI / 2); boardGeometry.translate(0, -0.4, 0); 
+    boardMesh = new THREE.Mesh(boardGeometry, boardMaterial); boardMesh.receiveShadow = true; 
+    neonEdgesMesh = new THREE.LineSegments(new THREE.EdgesGeometry(boardGeometry, 15), neonMaterial); boardMesh.add(neonEdgesMesh); scene.add(boardMesh);
+    if (sun.shadow && sun.shadow.camera) { sun.shadow.camera.left = -boardWidth/1.2; sun.shadow.camera.right = boardWidth/1.2; sun.shadow.camera.top = boardDepth/1.2; sun.shadow.camera.bottom = -boardDepth/1.2; sun.shadow.camera.updateProjectionMatrix(); }
+    if(factor === 1) camera.position.set(0, 45, 55); else if(factor === 2) camera.position.set(0, 85, 100); else camera.position.set(0, 120, 140); controls.target.set(0,0,0);
 }
-
 buildDynamicBoard(3);
 
-// ======================================
-// EGG SHAPE GENERATOR
-// ======================================
-const blobGeometry = new THREE.SphereGeometry(1, 32, 32);
-const positions = blobGeometry.attributes.position;
-for(let i=0; i<positions.count; i++) {
-    const y = positions.getY(i);
-    let scale = 1.0;
-    
-    if (y > 0) {
-        scale = 1.0 - (y * 0.4); 
-    } else {
-        scale = 1.0 + Math.abs(y * 0.15); // Bottom heavy
-    }
-    
-    positions.setX(i, positions.getX(i) * scale);
-    positions.setZ(i, positions.getZ(i) * scale);
-}
+const blobGeometry = new THREE.SphereGeometry(1, 32, 32); const positions = blobGeometry.attributes.position;
+for(let i=0; i<positions.count; i++) { const y = positions.getY(i); let scale = y > 0 ? 1.0 - (y * 0.4) : 1.0 + Math.abs(y * 0.15); positions.setX(i, positions.getX(i) * scale); positions.setZ(i, positions.getZ(i) * scale); }
 blobGeometry.computeVertexNormals();
-
-const eyeGeometry = new THREE.SphereGeometry(0.12, 16, 16);
-const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x111111 });
-const handGeometry = new THREE.SphereGeometry(0.2, 16, 16);
-const foodGeometry = new THREE.SphereGeometry(0.35, 12, 12);
-const foodMaterial = new THREE.MeshStandardMaterial({ color: 0x66cc66, roughness: 0.6, emissive: 0x22aa22, emissiveIntensity: 0.3 });
+const eyeGeometry = new THREE.SphereGeometry(0.12, 16, 16); const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0x111111 }); const handGeometry = new THREE.SphereGeometry(0.2, 16, 16); const foodGeometry = new THREE.SphereGeometry(0.35, 12, 12); const foodMaterial = new THREE.MeshStandardMaterial({ color: 0x66cc66, roughness: 0.6, emissive: 0x22aa22, emissiveIntensity: 0.3 });
 
 // ======================================
 // SIMULATION VARIABLES
 // ======================================
-let foods = [];
-let currentFoodAmount = 120;
-let generation = 1;
-
-let isPaused = false;
-let simSpeedMultiplier = 1.0; 
-let nextGenTimeout = null; 
-
-let timeAccumulator = 0;
-let dayTimeElapsed = 0;
-let returnTimeElapsed = 0; 
-let lastFrameTime = performance.now();
-const TIME_STEP = 1000 / 60; 
-let DAY_LENGTH_MS = 15000; 
-const MAX_RETURN_TIME_MS = 8000; 
-let dayPhase = 'hunting'; 
+let foods = []; let currentFoodAmount = 120; let generation = 1; let isPaused = false; let simSpeedMultiplier = 1.0; let nextGenTimeout = null; 
+let timeAccumulator = 0; let dayTimeElapsed = 0; let returnTimeElapsed = 0; let lastFrameTime = performance.now(); const TIME_STEP = 1000 / 60; let DAY_LENGTH_MS = 15000; const MAX_RETURN_TIME_MS = 8000; let dayPhase = 'hunting'; 
 
 function spawnFood(amount) {
-    for(let i=0; i<amount; i++) {
-        const food = new THREE.Mesh(foodGeometry, foodMaterial);
-        food.castShadow = true;
-        food.position.set((Math.random() - 0.5) * (boardWidth - 4), 0.35, (Math.random() - 0.5) * (boardDepth - 4));
-        scene.add(food); foods.push(food);
-    }
+    for(let i=0; i<amount; i++) { const food = new THREE.Mesh(foodGeometry, foodMaterial); food.castShadow = true; food.position.set((Math.random() - 0.5) * (boardWidth - 4), 0.35, (Math.random() - 0.5) * (boardDepth - 4)); scene.add(food); foods.push(food); }
     document.getElementById('foodCount').innerText = foods.length;
 }
 
@@ -483,107 +357,52 @@ function spawnFood(amount) {
 // AGENT CLASS
 // ======================================
 let agents = [];
-
 class Agent {
-    constructor(x, z, speedInherited, visionInherited, sizeInherited) {
+    constructor(x, z, speedInherited, visionInherited, sizeInherited, dietInherited) {
         this.speed = configUseSpeed ? (speedInherited || 0.5 + Math.random() * 1.0) : 1.0;
         this.vision = configUseSense ? (visionInherited || 12 + Math.random() * 8) : 15;
         this.size = configUseSize ? (sizeInherited || 0.8 + Math.random() * 0.4) : 1.0; 
+        this.isCarnivore = (dietInherited !== undefined && dietInherited !== null) ? dietInherited : (Math.random() > 0.85);
+        this.turnSpeed = 0.08; this.energy = window.baseEnergy; this.foodCollected = 0; this.state = "wander"; this.target = null; this.targetEdge = null; this.isAgent = true; this.wanderAngle = Math.atan2(-x, -z); this.wanderTimer = 0; this.eatTimer = 0; this.foodStartPos = null;
         
-        this.turnSpeed = 0.08;
-        this.energy = 4000; 
-        this.foodCollected = 0;
-        this.state = "wander";
-        this.target = null;
-        this.targetEdge = null;
-        this.isAgent = true; 
-        
-        this.wanderAngle = Math.atan2(-x, -z);
-        this.wanderTimer = 0;
-        this.eatTimer = 0; 
-        this.foodStartPos = null;
-
         this.mesh = new THREE.Group();
-        
-        let clampedSpeed = Math.max(0.5, Math.min(this.speed, 2.0));
-        let speedT = (clampedSpeed - 0.5) / 1.5; 
-        let hueVal = 0.85 * (1.0 - speedT);
+        let clampedSpeed = Math.max(0.5, Math.min(this.speed, 2.0)); let hueVal = 0.85 * (1.0 - ((clampedSpeed - 0.5) / 1.5));
         const baseColor = new THREE.Color().setHSL(hueVal, 0.75, 0.55);
-        
-        const bodyMat = new THREE.MeshStandardMaterial({ 
-            color: baseColor, roughness: 0.5,
-            emissive: baseColor, emissiveIntensity: 0.3
-        });
-        
-        const body = new THREE.Mesh(blobGeometry, bodyMat);
-        body.scale.set(this.size, 1.5 * this.size, this.size);
-        body.castShadow = true; body.receiveShadow = true;
-        this.mesh.add(body);
-
-        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial); leftEye.position.set(-0.25*this.size, 0.75*this.size, 0.72*this.size);
-        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial); rightEye.position.set(0.25*this.size, 0.75*this.size, 0.72*this.size);
+        const bodyMat = new THREE.MeshStandardMaterial({ color: baseColor, roughness: 0.5, emissive: baseColor, emissiveIntensity: 0.3 });
+        const body = new THREE.Mesh(blobGeometry, bodyMat); body.scale.set(this.size, 1.5 * this.size, this.size); body.castShadow = true; body.receiveShadow = true; this.mesh.add(body);
+        const myEyeMaterial = new THREE.MeshBasicMaterial({ color: this.isCarnivore ? 0xff3333 : 0x111111 });
+        const leftEye = new THREE.Mesh(eyeGeometry, myEyeMaterial); leftEye.position.set(-0.25*this.size, 0.75*this.size, 0.72*this.size);
+        const rightEye = new THREE.Mesh(eyeGeometry, myEyeMaterial); rightEye.position.set(0.25*this.size, 0.75*this.size, 0.72*this.size);
         this.mesh.add(leftEye); this.mesh.add(rightEye);
-
-        const mouthGeo = new THREE.SphereGeometry(0.15*this.size, 16, 16);
-        this.mouth = new THREE.Mesh(mouthGeo, eyeMaterial);
-        this.mouth.position.set(0, 0.15*this.size, 0.96*this.size);
-        this.mouth.scale.set(1, 0.1, 0.5); 
-        this.mouth.visible = false;
-        this.mesh.add(this.mouth);
-
-        this.leftHand = new THREE.Mesh(handGeometry, bodyMat);
-        this.leftHand.scale.setScalar(this.size);
-        this.leftHand.position.set(-0.7*this.size, 0.3*this.size, 0.8*this.size);
-        this.leftHand.castShadow = true;
-        this.leftHand.visible = false;
-        this.mesh.add(this.leftHand);
-
-        this.rightHand = new THREE.Mesh(handGeometry, bodyMat);
-        this.rightHand.scale.setScalar(this.size);
-        this.rightHand.position.set(0.7*this.size, 0.3*this.size, 0.8*this.size);
-        this.rightHand.castShadow = true;
-        this.rightHand.visible = false;
-        this.mesh.add(this.rightHand);
-
-        this.mesh.position.set(x, 1.5 * this.size, z);
-        this.mesh.rotation.y = this.wanderAngle;
-        scene.add(this.mesh);
+        this.mouth = new THREE.Mesh(new THREE.SphereGeometry(0.15*this.size, 16, 16), eyeMaterial); this.mouth.position.set(0, 0.15*this.size, 0.96*this.size); this.mouth.scale.set(1, 0.1, 0.5); this.mouth.visible = false; this.mesh.add(this.mouth);
+        this.leftHand = new THREE.Mesh(handGeometry, bodyMat); this.leftHand.scale.setScalar(this.size); this.leftHand.position.set(-0.7*this.size, 0.3*this.size, 0.8*this.size); this.leftHand.castShadow = true; this.leftHand.visible = false; this.mesh.add(this.leftHand);
+        this.rightHand = new THREE.Mesh(handGeometry, bodyMat); this.rightHand.scale.setScalar(this.size); this.rightHand.position.set(0.7*this.size, 0.3*this.size, 0.8*this.size); this.rightHand.castShadow = true; this.rightHand.visible = false; this.mesh.add(this.rightHand);
+        this.mesh.position.set(x, 1.5 * this.size, z); this.mesh.rotation.y = this.wanderAngle; scene.add(this.mesh);
     }
 
     applySeparation() {
         for (const other of agents) {
             if (other !== this && other.state !== 'dead' && other.state !== 'dying') {
                 if (this.target === other || other.target === this) continue;
-
-                const dx = this.mesh.position.x - other.mesh.position.x;
-                const dz = this.mesh.position.z - other.mesh.position.z;
-                const dist = Math.sqrt(dx * dx + dz * dz);
-                const safeDist = (this.size + other.size) * 1.1;
-
-                if (dist < safeDist && dist > 0) { 
-                    const pushX = (dx / dist) * 0.06;
-                    const pushZ = (dz / dist) * 0.06;
-                    this.mesh.position.x += pushX;
-                    this.mesh.position.z += pushZ;
-                }
+                const dx = this.mesh.position.x - other.mesh.position.x; const dz = this.mesh.position.z - other.mesh.position.z; const dist = Math.sqrt(dx * dx + dz * dz); const safeDist = (this.size + other.size) * 1.1;
+                if (dist < safeDist && dist > 0) { this.mesh.position.x += (dx / dist) * 0.06; this.mesh.position.z += (dz / dist) * 0.06; }
             }
         }
     }
 
     findTarget() {
         let closest = null; let minDist = Infinity;
-        
-        for(const food of foods) {
-            const dist = this.mesh.position.distanceTo(food.position);
-            if(dist < this.vision && dist < minDist) { closest = food; minDist = dist; }
-        }
-        
-        if (configUseSize) {
+        if (!this.isCarnivore) {
+            for(const food of foods) {
+                const dist = this.mesh.position.distanceTo(food.position);
+                if(dist < (this.vision * window.visionMult) && dist < minDist) { closest = food; minDist = dist; }
+            }
+        } else if (configUseSize) {
             for(const other of agents) {
                 if (other !== this && other.state !== 'dead' && other.state !== 'dying' && other.state !== 'eating') {
-                    if (this.size >= other.size * 1.2) { 
+                    if (this.size >= other.size * window.carnivoreAdvantage) { 
                         const dist = this.mesh.position.distanceTo(other.mesh.position);
-                        if(dist < this.vision && dist < minDist) { closest = other; minDist = dist; }
+                        if(dist < (this.vision * window.visionMult) && dist < minDist) { closest = other; minDist = dist; }
                     }
                 }
             }
@@ -592,199 +411,70 @@ class Agent {
     }
 
     getNearestEdge() {
-        const limitX = boardWidth / 2 - 1.5; const limitZ = boardDepth / 2 - 1.5;
-        const distToX = limitX - Math.abs(this.mesh.position.x);
-        const distToZ = limitZ - Math.abs(this.mesh.position.z);
-        const spread = (Math.random() - 0.5) * (boardDepth / 3); 
-
-        if (distToX < distToZ) {
-            let targetZ = Math.max(-limitZ, Math.min(limitZ, this.mesh.position.z + spread));
-            return new THREE.Vector3(Math.sign(this.mesh.position.x) * limitX, 1.5 * this.size, targetZ);
-        } else {
-            let targetX = Math.max(-limitX, Math.min(limitX, this.mesh.position.x + spread));
-            return new THREE.Vector3(targetX, 1.5 * this.size, Math.sign(this.mesh.position.z) * limitZ);
-        }
+        const limitX = boardWidth / 2 - 1.5; const limitZ = boardDepth / 2 - 1.5; const distToX = limitX - Math.abs(this.mesh.position.x); const distToZ = limitZ - Math.abs(this.mesh.position.z); const spread = (Math.random() - 0.5) * (boardDepth / 3); 
+        if (distToX < distToZ) { return new THREE.Vector3(Math.sign(this.mesh.position.x) * limitX, 1.5 * this.size, Math.max(-limitZ, Math.min(limitZ, this.mesh.position.z + spread))); } 
+        else { return new THREE.Vector3(Math.max(-limitX, Math.min(limitX, this.mesh.position.x + spread)), 1.5 * this.size, Math.sign(this.mesh.position.z) * limitZ); }
     }
 
     moveToward(targetAngle, speedModifier = 1.0) {
-        let diff = targetAngle - this.mesh.rotation.y;
-        while(diff < -Math.PI) diff += Math.PI * 2;
-        while(diff > Math.PI) diff -= Math.PI * 2;
-        this.mesh.rotation.y += diff * this.turnSpeed;
-
-        const moveSpeed = this.speed * 0.05 * speedModifier;
-        this.mesh.position.x += Math.sin(this.mesh.rotation.y) * moveSpeed;
-        this.mesh.position.z += Math.cos(this.mesh.rotation.y) * moveSpeed;
-        
-        const movementCost = Math.pow(this.size, 3) * Math.pow(this.speed, 2) * 1.5;
-        this.energy -= movementCost;
-        this.handleWalls();
+        let diff = targetAngle - this.mesh.rotation.y; while(diff < -Math.PI) diff += Math.PI * 2; while(diff > Math.PI) diff -= Math.PI * 2; this.mesh.rotation.y += diff * this.turnSpeed;
+        const moveSpeed = this.speed * window.speedMult * 0.05 * speedModifier;
+        this.mesh.position.x += Math.sin(this.mesh.rotation.y) * moveSpeed; this.mesh.position.z += Math.cos(this.mesh.rotation.y) * moveSpeed;
+        const movementCost = Math.pow(this.size, 3) * Math.pow(this.speed * window.speedMult, 2) * 1.5 * window.speedTaxMult;
+        this.energy -= movementCost; this.handleWalls();
     }
 
     handleWalls() {
-        const limitX = boardWidth / 2 - 1.5; const limitZ = boardDepth / 2 - 1.5;
-        const pos = this.mesh.position;
-        if(pos.x > limitX || pos.x < -limitX || pos.z > limitZ || pos.z < -limitZ) {
-            this.wanderAngle = Math.atan2(-pos.x, -pos.z);
-            pos.x = Math.max(-limitX, Math.min(limitX, pos.x));
-            pos.z = Math.max(-limitZ, Math.min(limitZ, pos.z));
-        }
+        const limitX = boardWidth / 2 - 1.5; const limitZ = boardDepth / 2 - 1.5; const pos = this.mesh.position;
+        if(pos.x > limitX || pos.x < -limitX || pos.z > limitZ || pos.z < -limitZ) { this.wanderAngle = Math.atan2(-pos.x, -pos.z); pos.x = Math.max(-limitX, Math.min(limitX, pos.x)); pos.z = Math.max(-limitZ, Math.min(limitZ, pos.z)); }
     }
 
     update() {
         if (this.state === 'dead') return;
-
-        if (this.state === 'dying') {
-            this.mesh.scale.multiplyScalar(0.85); 
-            this.mesh.children[0].material.color.lerp(new THREE.Color(0x333333), 0.15); 
-            this.mesh.children[0].material.emissiveIntensity = 0; 
-            if (this.mesh.scale.y < 0.05) {
-                this.state = 'dead';
-                scene.remove(this.mesh);
-            }
-            return; 
-        }
+        if (this.state === 'dying') { this.mesh.scale.multiplyScalar(0.85); this.mesh.children[0].material.color.lerp(new THREE.Color(0x333333), 0.15); this.mesh.children[0].material.emissiveIntensity = 0; if (this.mesh.scale.y < 0.05) { this.state = 'dead'; scene.remove(this.mesh); } return; }
         
-        this.energy -= this.vision * 0.1;
+        this.energy -= ((this.vision * window.visionMult) * 0.1) + (Math.pow(this.size, 2) * 0.2 * window.sizeTaxMult);
 
         if (this.state === 'eating') {
-            this.applySeparation(); 
-            this.handleWalls();
-            
-            this.eatTimer++;
-            
-            if (this.eatTimer === 1) {
-                this.mouth.visible = true;
-                this.leftHand.visible = true;
-                this.rightHand.visible = true;
-            }
-            
-            const p = this.eatTimer / 30; 
-            const sz = this.size;
-            const targetMesh = this.target.isAgent ? this.target.mesh : this.target;
-            
+            this.applySeparation(); this.handleWalls(); this.eatTimer++;
+            if (this.eatTimer === 1) { this.mouth.visible = true; this.leftHand.visible = true; this.rightHand.visible = true; }
+            const p = this.eatTimer / 30; const sz = this.size; const targetMesh = this.target.isAgent ? this.target.mesh : this.target;
             if (p <= 1.0) {
                 if (targetMesh) {
-                    targetMesh.scale.setScalar(Math.max(0.01, 1 - p)); 
-                    targetMesh.position.x = THREE.MathUtils.lerp(this.foodStartPos.x, 0, p);
-                    targetMesh.position.y = THREE.MathUtils.lerp(this.foodStartPos.y, 0.15*sz, p);
-                    targetMesh.position.z = THREE.MathUtils.lerp(this.foodStartPos.z, 0.8*sz, p);
-                    
-                    this.leftHand.position.x = targetMesh.position.x - 0.3;
-                    this.leftHand.position.y = targetMesh.position.y;
-                    this.leftHand.position.z = targetMesh.position.z;
-                    this.rightHand.position.x = targetMesh.position.x + 0.3;
-                    this.rightHand.position.y = targetMesh.position.y;
-                    this.rightHand.position.z = targetMesh.position.z;
-                    
-                    this.mouth.scale.y = 0.1 + Math.sin(p * Math.PI) * 1.5;
+                    targetMesh.scale.setScalar(Math.max(0.01, 1 - p)); targetMesh.position.x = THREE.MathUtils.lerp(this.foodStartPos.x, 0, p); targetMesh.position.y = THREE.MathUtils.lerp(this.foodStartPos.y, 0.15*sz, p); targetMesh.position.z = THREE.MathUtils.lerp(this.foodStartPos.z, 0.8*sz, p);
+                    this.leftHand.position.set(targetMesh.position.x - 0.3, targetMesh.position.y, targetMesh.position.z); this.rightHand.position.set(targetMesh.position.x + 0.3, targetMesh.position.y, targetMesh.position.z); this.mouth.scale.y = 0.1 + Math.sin(p * Math.PI) * 1.5;
                 }
             } else {
                 if (targetMesh) this.mesh.remove(targetMesh); 
-                this.foodCollected++;
-                this.energy += (this.target.isAgent ? 1000 : 300); 
-                this.target = null;
-                this.state = 'wander';
-                
-                this.mouth.visible = false;
-                this.leftHand.visible = false;
-                this.rightHand.visible = false;
-                
-                this.leftHand.position.set(-0.7*sz, 0.3*sz, 0.8*sz);
-                this.rightHand.position.set(0.7*sz, 0.3*sz, 0.8*sz);
-                this.mouth.scale.y = 0.1;
+                this.foodCollected++; this.energy += (this.target.isAgent ? window.energyMeat : window.energyFood); this.target = null; this.state = 'wander';
+                this.mouth.visible = false; this.leftHand.visible = false; this.rightHand.visible = false;
+                this.leftHand.position.set(-0.7*sz, 0.3*sz, 0.8*sz); this.rightHand.position.set(0.7*sz, 0.3*sz, 0.8*sz); this.mouth.scale.y = 0.1;
             }
             return; 
         }
 
-        this.applySeparation();
-        this.handleWalls(); 
-
-        if (this.foodCollected >= 2 && (this.state === 'wander' || this.state === 'hunt')) {
-            this.state = 'full';
-            this.targetEdge = this.getNearestEdge();
-        }
-        
-        if (this.energy <= 0 && this.state !== 'home' && this.state !== 'full' && this.state !== 'returning') {
-            this.state = 'tired';
-        } else if (this.energy > 50 && this.state === 'tired') {
-            this.state = 'wander';
-        }
+        this.applySeparation(); this.handleWalls(); 
+        if (this.foodCollected >= window.reqFoodClone && (this.state === 'wander' || this.state === 'hunt')) { this.state = 'full'; this.targetEdge = this.getNearestEdge(); }
+        if (this.energy <= 0 && this.state !== 'home' && this.state !== 'full' && this.state !== 'returning') { this.state = 'tired'; } else if (this.energy > 50 && this.state === 'tired') { this.state = 'wander'; }
         
         if (this.state === 'full' || this.state === 'returning') {
             const dir = new THREE.Vector3().subVectors(this.targetEdge, this.mesh.position);
-            if (dir.length() < 2.0) {
-                this.state = 'home';
-            } else {
-                this.moveToward(Math.atan2(dir.x, dir.z), 0.7); 
-            }
+            if (dir.length() < 2.0) { this.state = 'home'; } else { this.moveToward(Math.atan2(dir.x, dir.z), 0.7); }
         } 
-        else if (this.state === 'home') {
-            let targetRot = Math.atan2(-this.mesh.position.x, -this.mesh.position.z);
-            let diff = targetRot - this.mesh.rotation.y;
-            while(diff < -Math.PI) diff += Math.PI * 2;
-            while(diff > Math.PI) diff -= Math.PI * 2;
-            this.mesh.rotation.y += diff * 0.1;
-        }
-        else if (this.state === 'tired') {
-            this.energy += 2; 
-            this.wanderTimer++;
-            if(this.wanderTimer > 60) { this.wanderAngle += (Math.random() - 0.5) * 1.5; this.wanderTimer = 0; }
-            this.moveToward(this.wanderAngle, 0.2); 
-        }
+        else if (this.state === 'home') { let targetRot = Math.atan2(-this.mesh.position.x, -this.mesh.position.z); let diff = targetRot - this.mesh.rotation.y; while(diff < -Math.PI) diff += Math.PI * 2; while(diff > Math.PI) diff -= Math.PI * 2; this.mesh.rotation.y += diff * 0.1; }
+        else if (this.state === 'tired') { this.energy += 2; this.wanderTimer++; if(this.wanderTimer > 60) { this.wanderAngle += (Math.random() - 0.5) * 1.5; this.wanderTimer = 0; } this.moveToward(this.wanderAngle, 0.2); }
         else {
-            if (this.target && this.target.state && (this.target.state === 'dead' || this.target.state === 'dying')) {
-                this.target = null;
-                this.state = 'wander';
-            }
-
-            let seenTarget = this.findTarget();
-            if(seenTarget) { this.target = seenTarget; this.state = "hunt"; }
-            else { this.state = "wander"; }
-
-            if(this.state === "wander") {
-                this.wanderTimer++;
-                if(this.wanderTimer > 60) {
-                    this.wanderAngle += (Math.random() - 0.5) * 1.5;
-                    this.wanderTimer = 0;
-                }
-                this.moveToward(this.wanderAngle, 0.6); 
-            }
+            if (this.target && this.target.state && (this.target.state === 'dead' || this.target.state === 'dying')) { this.target = null; this.state = 'wander'; }
+            let seenTarget = this.findTarget(); if(seenTarget) { this.target = seenTarget; this.state = "hunt"; } else { this.state = "wander"; }
+            if(this.state === "wander") { this.wanderTimer++; if(this.wanderTimer > 60) { this.wanderAngle += (Math.random() - 0.5) * 1.5; this.wanderTimer = 0; } this.moveToward(this.wanderAngle, 0.6); }
             else if(this.state === "hunt") {
-                if(!this.target || (!this.target.isAgent && !foods.includes(this.target))) {
-                    this.state = "wander";
-                } else {
-                    const dir = new THREE.Vector3().subVectors(
-                        this.target.isAgent ? this.target.mesh.position : this.target.position, 
-                        this.mesh.position
-                    );
-                    const dist = dir.length();
-                    const grabDist = this.target.isAgent ? (this.size + this.target.size) : (this.size * 2.2);
-
+                if(!this.target || (!this.target.isAgent && !foods.includes(this.target))) { this.state = "wander"; } else {
+                    const dir = new THREE.Vector3().subVectors(this.target.isAgent ? this.target.mesh.position : this.target.position, this.mesh.position); const dist = dir.length(); const grabDist = this.target.isAgent ? (this.size + this.target.size) : (this.size * 2.2);
                     if(dist < grabDist) {
-                        if (this.target.isAgent) {
-                            this.target.state = 'dying'; 
-                            this.state = 'eating';
-                            this.eatTimer = 0;
-                            this.mesh.attach(this.target.mesh);
-                            this.foodStartPos = this.target.mesh.position.clone();
-                        } else {
-                            const foodIdx = foods.indexOf(this.target);
-                            if (foodIdx > -1) {
-                                foods.splice(foodIdx, 1);
-                                document.getElementById('foodCount').innerText = foods.length;
-                                this.state = 'eating';
-                                this.eatTimer = 0;
-                                this.mesh.attach(this.target); 
-                                this.foodStartPos = this.target.position.clone(); 
-                            } else {
-                                this.target = null;
-                                this.state = 'wander';
-                            }
+                        if (this.target.isAgent) { this.target.state = 'dying'; this.state = 'eating'; this.eatTimer = 0; this.mesh.attach(this.target.mesh); this.foodStartPos = this.target.mesh.position.clone(); } else {
+                            const foodIdx = foods.indexOf(this.target); if (foodIdx > -1) { foods.splice(foodIdx, 1); document.getElementById('foodCount').innerText = foods.length; this.state = 'eating'; this.eatTimer = 0; this.mesh.attach(this.target); this.foodStartPos = this.target.position.clone(); } else { this.target = null; this.state = 'wander'; }
                         }
-                    } else {
-                        this.moveToward(Math.atan2(dir.x, dir.z), 1.0); 
-                    }
+                    } else { this.moveToward(Math.atan2(dir.x, dir.z), 1.0); }
                 }
             }
         }
@@ -796,311 +486,211 @@ class Agent {
 // ======================================
 function getEdgeSpawnPos() {
     const edge = Math.floor(Math.random() * 4); let x, z;
-    if (edge === 0) { x = -boardWidth/2 + 2; z = (Math.random() - 0.5) * (boardDepth - 4); }
-    else if (edge === 1) { x = boardWidth/2 - 2; z = (Math.random() - 0.5) * (boardDepth - 4); }
-    else if (edge === 2) { z = -boardDepth/2 + 2; x = (Math.random() - 0.5) * (boardWidth - 4); }
-    else { z = boardDepth/2 - 2; x = (Math.random() - 0.5) * (boardWidth - 4); }
+    if (edge === 0) { x = -boardWidth/2 + 2; z = (Math.random() - 0.5) * (boardDepth - 4); } else if (edge === 1) { x = boardWidth/2 - 2; z = (Math.random() - 0.5) * (boardDepth - 4); } else if (edge === 2) { z = -boardDepth/2 + 2; x = (Math.random() - 0.5) * (boardWidth - 4); } else { z = boardDepth/2 - 2; x = (Math.random() - 0.5) * (boardWidth - 4); }
     return {x, z};
 }
-
-function updateUIDisplay() {
-    document.getElementById('genCount').innerText = generation;
-    document.getElementById('dayBannerCount').innerText = generation; 
-    document.getElementById('popCount').innerText = agents.filter(a => a.state !== 'dead' && a.state !== 'dying').length;
-}
+function updateUIDisplay() { document.getElementById('genCount').innerText = generation; document.getElementById('dayBannerCount').innerText = generation; document.getElementById('popCount').innerText = agents.filter(a => a.state !== 'dead' && a.state !== 'dying').length; }
 
 function startNextGeneration() {
-    recordEndOfDayStats(); 
-
-    const nextPopulation = [];
-    
+    recordEndOfDayStats(); const nextPopulation = [];
     agents.forEach(creature => {
-        // Bug Fix: Only agents that are home OR have 1+ food and positive energy survive forced ends.
-        if (creature.state === 'home' || creature.state === 'returning' || creature.state === 'full' || (creature.foodCollected >= 1 && creature.energy > 0)) { 
-            
-            nextPopulation.push(new Agent(creature.mesh.position.x, creature.mesh.position.z, creature.speed, creature.vision, creature.size));
-            
-            if (creature.foodCollected >= 2) {
-                const mutatedSpeed = configUseSpeed ? Math.max(0.2, creature.speed + (Math.random() * 0.2 - 0.1)) : 1.0;
-                const mutatedVision = configUseSense ? Math.max(5, creature.vision + (Math.random() * 2 - 1)) : 15;
-                const mutatedSize = configUseSize ? Math.max(0.4, creature.size + (Math.random() * 0.2 - 0.1)) : 1.0;
-                
-                const babyX = creature.mesh.position.x + (Math.random() - 0.5) * 4;
-                const babyZ = creature.mesh.position.z + (Math.random() - 0.5) * 4;
-                nextPopulation.push(new Agent(babyX, babyZ, mutatedSpeed, mutatedVision, mutatedSize));
+        if (creature.state === 'home' || creature.state === 'returning' || creature.state === 'full' || (creature.foodCollected >= window.reqFoodSurvive && creature.energy > 0)) { 
+            nextPopulation.push(new Agent(creature.mesh.position.x, creature.mesh.position.z, creature.speed, creature.vision, creature.size, creature.isCarnivore));
+            if (creature.foodCollected >= window.reqFoodClone) {
+                const mutatedSpeed = configUseSpeed ? Math.max(0.2, creature.speed + (Math.random() * window.mutationRate - (window.mutationRate/2))) : 1.0;
+                const mutatedVision = configUseSense ? Math.max(5, creature.vision + (Math.random() * (window.mutationRate*10) - (window.mutationRate*5))) : 15;
+                const mutatedSize = configUseSize ? Math.max(0.4, creature.size + (Math.random() * window.mutationRate - (window.mutationRate/2))) : 1.0;
+                let mutatedDiet = creature.isCarnivore; if (Math.random() < (window.mutationRate * 0.25)) mutatedDiet = !mutatedDiet; 
+                nextPopulation.push(new Agent(creature.mesh.position.x + (Math.random() - 0.5)*4, creature.mesh.position.z + (Math.random() - 0.5)*4, mutatedSpeed, mutatedVision, mutatedSize, mutatedDiet));
             }
         }
         scene.remove(creature.mesh); 
     });
-
     agents = nextPopulation;
-
-    if (agents.length === 0) {
-        updateUIDisplay();
-        foods.forEach(f => scene.remove(f)); foods = []; 
-        document.getElementById('foodCount').innerText = "0";
-        dayPhase = 'extinct';
-        isPaused = true;
-
-        const pauseBtn = document.getElementById('btnPause');
-        pauseBtn.innerText = "EXTINCT (Restart)";
-        pauseBtn.style.background = "#555";
-        pauseBtn.style.pointerEvents = "none";
+    
+    // THE EXTINCTION TRIGGER
+    if (agents.length === 0) { 
+        updateUIDisplay(); foods.forEach(f => scene.remove(f)); foods = []; document.getElementById('foodCount').innerText = "0"; dayPhase = 'extinct'; isPaused = true; 
+        const btn = document.getElementById('btnPause'); btn.innerText = "EXTINCT (Restart)"; btn.style.background = "#555"; btn.style.pointerEvents = "none"; 
+        
+        // Show the Modal & Run Autopsy
+        document.getElementById('extinctModal').style.display = 'block';
+        runExtinctionAnalysis();
         return; 
     }
-
-    generation++; 
-    updateUIDisplay();
-
-    foods.forEach(f => scene.remove(f)); foods = []; 
-    spawnFood(currentFoodAmount);
     
-    dayPhase = 'hunting';
-    dayTimeElapsed = 0;
-    returnTimeElapsed = 0;
-    timeAccumulator = 0;
+    generation++; updateUIDisplay(); foods.forEach(f => scene.remove(f)); foods = []; spawnFood(currentFoodAmount); dayPhase = 'hunting'; dayTimeElapsed = 0; returnTimeElapsed = 0; timeAccumulator = 0;
 }
 
-// INITIAL SEED RUNTIME
-spawnFood(currentFoodAmount);
-for(let i=0; i<60; i++) {
-    const pos = getEdgeSpawnPos();
-    agents.push(new Agent(pos.x, pos.z, null, null, null));
-}
-updateUIDisplay();
+// INITIAL SEED
+spawnFood(currentFoodAmount); for(let i=0; i<60; i++) agents.push(new Agent(getEdgeSpawnPos().x, getEdgeSpawnPos().z, null, null, null)); updateUIDisplay();
 
 // ======================================
 // INTERACTIVE CONTROL TRIGGER EVENTS
 // ======================================
-document.getElementById('btnRules').addEventListener('click', () => { document.getElementById('rulesModal').style.display = 'block'; });
-document.getElementById('btnCloseRules').addEventListener('click', () => { document.getElementById('rulesModal').style.display = 'none'; });
-
-document.getElementById('btnGraphs').addEventListener('click', () => { 
-    document.getElementById('graphModal').style.display = 'flex';
-    initCharts();
-    updateCharts();
-});
+document.getElementById('btnGraphs').addEventListener('click', () => { document.getElementById('graphModal').style.display = 'flex'; initCharts(); updateCharts(); });
 document.getElementById('btnCloseGraphs').addEventListener('click', () => { document.getElementById('graphModal').style.display = 'none'; });
-
 document.getElementById('inputSpeed').addEventListener('change', (e) => { simSpeedMultiplier = parseFloat(e.target.value) || 1.0; });
 document.getElementById('inputAutoSpeed').addEventListener('change', (e) => { controls.autoRotateSpeed = parseFloat(e.target.value) || 2.0; });
 
 document.getElementById('btnRestart').addEventListener('click', () => {
-    configUseSpeed = document.getElementById('chkSpeed').checked;
-    configUseSize = document.getElementById('chkSize').checked;
-    configUseSense = document.getElementById('chkSense').checked;
-
-    const sizeMultiplier = parseInt(document.getElementById('selectSize').value) || 3;
-    buildDynamicBoard(sizeMultiplier);
-
-    const newPop = parseInt(document.getElementById('inputPop').value) || 60;
-    currentFoodAmount = parseInt(document.getElementById('inputFood').value) || 120;
-    
-    const newDayLen = parseInt(document.getElementById('inputDay').value) || 15;
-    DAY_LENGTH_MS = Math.max(1, Math.min(60, newDayLen)) * 1000;
-
-    agents.forEach(c => scene.remove(c.mesh)); agents = [];
-    foods.forEach(f => scene.remove(f)); foods = [];
-
-    // Reset History for new sim
-    simHistory = { days: [1], pop: [newPop], speed: [1.0], size: [1.0], sense: [15.0] };
-    if(chartsInitialized) updateCharts();
-
-    generation = 1; 
-    dayPhase = 'hunting'; 
-    dayTimeElapsed = 0;
-    returnTimeElapsed = 0;
-    timeAccumulator = 0;
-    isPaused = false;
-    
-    const pauseBtn = document.getElementById('btnPause');
-    pauseBtn.innerText = "Pause Sim";
-    pauseBtn.style.background = "#e6b800";
-    pauseBtn.style.pointerEvents = "auto"; 
-
-    if (nextGenTimeout) clearTimeout(nextGenTimeout);
-
-    spawnFood(currentFoodAmount);
-    for(let i=0; i<newPop; i++) {
-        const pos = getEdgeSpawnPos();
-        agents.push(new Agent(pos.x, pos.z, null, null, null));
-    }
-    updateUIDisplay();
+    document.getElementById('extinctModal').style.display = 'none'; // Ensure modal hides
+    configUseSpeed = document.getElementById('chkSpeed').checked; configUseSize = document.getElementById('chkSize').checked; configUseSense = document.getElementById('chkSense').checked;
+    buildDynamicBoard(parseInt(document.getElementById('selectSize').value) || 3);
+    const newPop = parseInt(document.getElementById('inputPop').value) || 60; currentFoodAmount = parseInt(document.getElementById('inputFood').value) || 120; DAY_LENGTH_MS = Math.max(1, Math.min(60, parseInt(document.getElementById('inputDay').value) || 15)) * 1000;
+    agents.forEach(c => scene.remove(c.mesh)); agents = []; foods.forEach(f => scene.remove(f)); foods = [];
+    simHistory = { days: [1], pop: [newPop], speed: [1.0], size: [1.0], sense: [15.0] }; if(chartsInitialized) updateCharts();
+    generation = 1; dayPhase = 'hunting'; dayTimeElapsed = 0; returnTimeElapsed = 0; timeAccumulator = 0; isPaused = false;
+    const btn = document.getElementById('btnPause'); btn.innerText = "Pause Sim"; btn.style.background = "#e6b800"; btn.style.pointerEvents = "auto"; 
+    if (nextGenTimeout) clearTimeout(nextGenTimeout); spawnFood(currentFoodAmount); for(let i=0; i<newPop; i++) agents.push(new Agent(getEdgeSpawnPos().x, getEdgeSpawnPos().z, null, null, null)); updateUIDisplay();
 });
 
-document.getElementById('btnPause').addEventListener('click', () => {
-    if (dayPhase === 'extinct') return;
-    isPaused = !isPaused;
-    const btn = document.getElementById('btnPause');
-    if (isPaused) { btn.innerText = "Resume Sim"; btn.style.background = "#cc6666"; } 
-    else { btn.innerText = "Pause Sim"; btn.style.background = "#e6b800"; lastFrameTime = performance.now(); }
-});
-
-document.getElementById('btnSkip').addEventListener('click', () => {
-    if (dayPhase === 'hunting') { 
-        // Bug Fix: Only drain energy for the time that actually passed, instead of the full day, to prevent force-end starvation.
-        let remainingTime = DAY_LENGTH_MS - dayTimeElapsed;
-        dayTimeElapsed = DAY_LENGTH_MS; 
-        if (isPaused) document.getElementById('btnPause').click(); 
-    } 
-    else if (dayPhase === 'returning') { 
-        dayPhase = 'nextGen'; 
-        if (nextGenTimeout) clearTimeout(nextGenTimeout); 
-        startNextGeneration(); 
-    }
-});
-
-document.getElementById('btnAutoRotate').addEventListener('click', () => {
-    controls.autoRotate = !controls.autoRotate;
-    document.getElementById('btnAutoRotate').innerText = controls.autoRotate ? "Auto Rotate: ON" : "Auto Rotate: OFF";
-    document.getElementById('btnAutoRotate').style.background = controls.autoRotate ? "#66cc66" : "#ff9933";
-});
-
-document.getElementById('btnRotate').addEventListener('click', () => {
-    const x = camera.position.x; const z = camera.position.z; const angle = Math.PI / 4; 
-    camera.position.x = x * Math.cos(angle) - z * Math.sin(angle);
-    camera.position.z = x * Math.sin(angle) + z * Math.cos(angle);
-    camera.lookAt(0,0,0);
-});
+document.getElementById('btnExtinctRestart').addEventListener('click', () => { document.getElementById('extinctModal').style.display = 'none'; document.getElementById('btnRestart').click(); });
+document.getElementById('btnPause').addEventListener('click', () => { if (dayPhase === 'extinct') return; isPaused = !isPaused; const btn = document.getElementById('btnPause'); if (isPaused) { btn.innerText = "Resume Sim"; btn.style.background = "#cc6666"; } else { btn.innerText = "Pause Sim"; btn.style.background = "#e6b800"; lastFrameTime = performance.now(); } });
+document.getElementById('btnSkip').addEventListener('click', () => { if (dayPhase === 'hunting') { let remainingTime = DAY_LENGTH_MS - dayTimeElapsed; dayTimeElapsed = DAY_LENGTH_MS; if (isPaused) document.getElementById('btnPause').click(); } else if (dayPhase === 'returning') { dayPhase = 'nextGen'; if (nextGenTimeout) clearTimeout(nextGenTimeout); startNextGeneration(); } });
+document.getElementById('btnAutoRotate').addEventListener('click', () => { controls.autoRotate = !controls.autoRotate; document.getElementById('btnAutoRotate').innerText = controls.autoRotate ? "Auto Rotate: ON" : "Auto Rotate: OFF"; document.getElementById('btnAutoRotate').style.background = controls.autoRotate ? "#66cc66" : "#ff9933"; });
+document.getElementById('btnRotate').addEventListener('click', () => { const x = camera.position.x; const z = camera.position.z; const angle = Math.PI / 4; camera.position.x = x * Math.cos(angle) - z * Math.sin(angle); camera.position.z = x * Math.sin(angle) + z * Math.cos(angle); camera.lookAt(0,0,0); });
 
 // ======================================
-// FIX RATE RUNTIME SYSTEM TICK ENGINE
+// MAIN ANIMATION TICK
 // ======================================
 function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-
-    const now = performance.now();
-    let delta = now - lastFrameTime;
-    lastFrameTime = now;
-
-    let timeFraction = 0;
-    if (dayPhase === 'hunting' || dayPhase === 'returning' || dayPhase === 'nextGen') {
-        timeFraction = Math.min(dayTimeElapsed / DAY_LENGTH_MS, 1.0);
-    } else if (dayPhase === 'extinct') {
-        timeFraction = Math.min(dayTimeElapsed / DAY_LENGTH_MS, 1.0); 
-    }
-
-    const timeBar = document.getElementById('time-bar-fill');
-    if(timeBar) {
-        timeBar.style.width = (timeFraction * 100) + '%';
-        if (timeFraction < 0.5) timeBar.style.backgroundColor = '#ffcc00'; 
-        else if (timeFraction < 0.8) timeBar.style.backgroundColor = '#ff6600'; 
-        else timeBar.style.backgroundColor = '#4444ff'; 
-    }
-
-    const sunRadius = boardWidth * 0.8;
-    const sunAngle = Math.PI - (timeFraction * Math.PI); 
-    sun.position.x = Math.cos(sunAngle) * sunRadius;
-    sun.position.y = Math.sin(sunAngle) * sunRadius + 20; 
-
-    let ambientIntensity = 0.7;
-    let sunIntensity = 0.6;
-    let moonIntensity = 0;
-    let boardGlow = 0;
-    let neonOpacity = 0;
-
-    if (timeFraction < 0.5) { 
-        const t = timeFraction * 2;
-        scene.background.copy(colorMorning).lerp(colorMidday, t);
-    } else if (timeFraction < 0.8) { 
-        const t = (timeFraction - 0.5) / 0.3;
-        scene.background.copy(colorMidday).lerp(colorSunset, t);
-        ambientIntensity = 0.7 - (0.3 * t);
-        sunIntensity = 0.6 - (0.2 * t);
-        if (t > 0.5) {
-            const nightT = (t - 0.5) / 0.5;
-            moonIntensity = 0.2 * nightT; boardGlow = 0.05 * nightT; neonOpacity = 0.5 * nightT;
-        }
-    } else { 
-        const t = (timeFraction - 0.8) / 0.2;
-        scene.background.copy(colorSunset).lerp(colorNight, t);
-        ambientIntensity = 0.4 - (0.15 * t); sunIntensity = 0.4 - (0.4 * t);     
-        moonIntensity = 0.2 + (0.2 * t); boardGlow = 0.05 + (0.15 * t); neonOpacity = 0.5 + (0.5 * t);   
-    }
-
-    ambientLight.intensity = ambientIntensity;
-    sun.intensity = sunIntensity;
-    moonLight.intensity = moonIntensity;
-    boardMaterial.emissiveIntensity = boardGlow;
-    neonMaterial.opacity = neonOpacity;
-
+    requestAnimationFrame(animate); controls.update(); const now = performance.now(); let delta = now - lastFrameTime; lastFrameTime = now;
+    let timeFraction = 0; if (dayPhase === 'hunting' || dayPhase === 'returning' || dayPhase === 'nextGen' || dayPhase === 'extinct') { timeFraction = Math.min(dayTimeElapsed / DAY_LENGTH_MS, 1.0); }
+    const timeBar = document.getElementById('time-bar-fill'); if(timeBar) { timeBar.style.width = (timeFraction * 100) + '%'; timeBar.style.backgroundColor = timeFraction < 0.5 ? '#ffcc00' : (timeFraction < 0.8 ? '#ff6600' : '#4444ff'); }
+    const sunRadius = boardWidth * 0.8; const sunAngle = Math.PI - (timeFraction * Math.PI); sun.position.x = Math.cos(sunAngle) * sunRadius; sun.position.y = Math.sin(sunAngle) * sunRadius + 20; 
+    let ambientIntensity = 0.7; let sunIntensity = 0.6; let moonIntensity = 0; let boardGlow = 0; let neonOpacity = 0;
+    if (timeFraction < 0.5) { const t = timeFraction * 2; scene.background.copy(colorMorning).lerp(colorMidday, t); } else if (timeFraction < 0.8) { const t = (timeFraction - 0.5) / 0.3; scene.background.copy(colorMidday).lerp(colorSunset, t); ambientIntensity = 0.7 - (0.3 * t); sunIntensity = 0.6 - (0.2 * t); if (t > 0.5) { const nightT = (t - 0.5) / 0.5; moonIntensity = 0.2 * nightT; boardGlow = 0.05 * nightT; neonOpacity = 0.5 * nightT; } } else { const t = (timeFraction - 0.8) / 0.2; scene.background.copy(colorSunset).lerp(colorNight, t); ambientIntensity = 0.4 - (0.15 * t); sunIntensity = 0.4 - (0.4 * t); moonIntensity = 0.2 + (0.2 * t); boardGlow = 0.05 + (0.15 * t); neonOpacity = 0.5 + (0.5 * t); }
+    ambientLight.intensity = ambientIntensity; sun.intensity = sunIntensity; moonLight.intensity = moonIntensity; boardMaterial.emissiveIntensity = boardGlow; neonMaterial.opacity = neonOpacity;
     if (!isPaused && dayPhase !== 'extinct') {
-        if (delta > 250) delta = 250; 
-        timeAccumulator += delta * simSpeedMultiplier;
-
+        if (delta > 250) delta = 250; timeAccumulator += delta * simSpeedMultiplier;
         while (timeAccumulator >= TIME_STEP) {
-            
             if (dayPhase === 'hunting') {
-                dayTimeElapsed += TIME_STEP;
-                let activeHunters = false;
-
-                agents.forEach(agent => {
-                    if (agent.state !== 'dying') agent.update();
-                    if (agent.state !== 'home' && agent.state !== 'dead') activeHunters = true;
-                });
-
-                if (dayTimeElapsed >= DAY_LENGTH_MS || (!activeHunters && foods.length > 0) || foods.length === 0) {
-                    dayPhase = 'returning';
-                    returnTimeElapsed = 0; 
-                    agents.forEach(c => {
-                        if (c.state === 'eating') {
-                            if(c.target) { if (c.target.isAgent) scene.remove(c.target.mesh); else c.mesh.remove(c.target); }
-                            c.target = null;
-                            c.mouth.visible = false;
-                            c.leftHand.visible = false;
-                            c.rightHand.visible = false;
-                            c.leftHand.position.set(-0.7*c.size, 0.3*c.size, 0.8*c.size);
-                            c.rightHand.position.set(0.7*c.size, 0.3*c.size, 0.8*c.size);
-                        }
-                        c.mouth.scale.y = 0.1; 
-                        if (c.foodCollected === 0) { c.state = 'dying'; } 
-                        else if (c.state !== 'home' && c.state !== 'full') { c.state = 'returning'; c.targetEdge = c.getNearestEdge(); }
-                    });
-                }
-            } 
-            else if (dayPhase === 'returning') {
-                returnTimeElapsed += TIME_STEP; 
-                if (dayTimeElapsed < DAY_LENGTH_MS) dayTimeElapsed += TIME_STEP * 4; 
-
-                let allHome = true;
-                agents.forEach(agent => {
-                    if (agent.state !== 'dead') {
-                        agent.update(); 
-                        if (agent.state !== 'home' && agent.state !== 'dying') allHome = false;
-                    }
-                });
-
-                if (allHome || returnTimeElapsed >= MAX_RETURN_TIME_MS) {
-                    dayPhase = 'nextGen';
-                    nextGenTimeout = setTimeout(startNextGeneration, 500);
-                    timeAccumulator = 0; 
-                    break; 
-                }
+                dayTimeElapsed += TIME_STEP; let activeHunters = false; agents.forEach(agent => { if (agent.state !== 'dying') agent.update(); if (agent.state !== 'home' && agent.state !== 'dead') activeHunters = true; });
+                if (dayTimeElapsed >= DAY_LENGTH_MS || (!activeHunters && foods.length > 0) || foods.length === 0) { dayPhase = 'returning'; returnTimeElapsed = 0; agents.forEach(c => { if (c.state === 'eating') { if(c.target) { if (c.target.isAgent) scene.remove(c.target.mesh); else c.mesh.remove(c.target); } c.target = null; c.mouth.visible = false; c.leftHand.visible = false; c.rightHand.visible = false; c.leftHand.position.set(-0.7*c.size, 0.3*c.size, 0.8*c.size); c.rightHand.position.set(0.7*c.size, 0.3*c.size, 0.8*c.size); } c.mouth.scale.y = 0.1; if (c.foodCollected < window.reqFoodSurvive) { c.state = 'dying'; } else if (c.state !== 'home' && c.state !== 'full') { c.state = 'returning'; c.targetEdge = c.getNearestEdge(); } }); }
+            } else if (dayPhase === 'returning') {
+                returnTimeElapsed += TIME_STEP; if (dayTimeElapsed < DAY_LENGTH_MS) dayTimeElapsed += TIME_STEP * 4; let allHome = true; agents.forEach(agent => { if (agent.state !== 'dead') { agent.update(); if (agent.state !== 'home' && agent.state !== 'dying') allHome = false; } });
+                if (allHome || returnTimeElapsed >= MAX_RETURN_TIME_MS) { dayPhase = 'nextGen'; nextGenTimeout = setTimeout(startNextGeneration, 500); timeAccumulator = 0; break; }
             }
-
-            agents.forEach(agent => {
-                if (agent.state !== 'dead' && agent.state !== 'dying') {
-                    const t = now * 0.004 * simSpeedMultiplier;
-                    agent.mesh.scale.y = 1 + Math.sin(t + agent.speed) * 0.03;
-                }
-            });
-
-            timeAccumulator -= TIME_STEP;
-            updateUIDisplay();
+            agents.forEach(agent => { if (agent.state !== 'dead' && agent.state !== 'dying') { agent.mesh.scale.y = 1 + Math.sin((now * 0.004 * simSpeedMultiplier) + agent.speed) * 0.03; } });
+            timeAccumulator -= TIME_STEP; updateUIDisplay();
         }
     }
-
     renderer.render(scene, camera);
 }
-animate();
+animate(); window.addEventListener("resize", () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
 
-window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+// ======================================
+// AI EVOLUTIONARY BIOLOGIST LOGIC
+// ======================================
+// 1. Try to load the key from the browser's memory
+let GEMINI_API_KEY = localStorage.getItem('gemini_api_key');
+
+// 2. If it doesn't exist, ask the user for it once
+if (!GEMINI_API_KEY) {
+    GEMINI_API_KEY = prompt("Welcome! Please enter your Gemini API key to start the simulation:");
+    if (GEMINI_API_KEY) {
+        localStorage.setItem('gemini_api_key', GEMINI_API_KEY);
+    }
+}
+
+// 3. Add a "Reset Key" button to your UI so they can change it later
+// Add this to your HTML dashboard area:
+// <button id="resetKeyBtn" class="ctrl-btn" style="background:#ff3333;">Reset API Key</button>
+
+document.getElementById('resetKeyBtn').addEventListener('click', () => {
+    localStorage.removeItem('gemini_api_key');
+    location.reload();
 });
 
+async function runExtinctionAnalysis() {
+    const outputBox = document.getElementById('extinct-ai-output');
+    outputBox.innerText = "🤖 The AI is reviewing the history to see why everyone died...";
+
+    if (simHistory.days.length < 2) {
+        outputBox.innerText = "The ecosystem collapsed too quickly to gather meaningful evolutionary data. The starting parameters were likely too harsh!";
+        return;
+    }
+
+    const systemPrompt = `You are a statistical evolutionary biologist analyzing a Natural Selection Simulator.
+    The ecosystem just went EXTINCT on day ${simHistory.days.length}.
+    
+    Current Environment Variables:
+    - Food needed to survive: ${window.reqFoodSurvive}
+    - Food needed to clone: ${window.reqFoodClone}
+    - Speed Energy Tax Multiplier: ${window.speedTaxMult} (Cost of moving fast)
+    - Size Energy Tax Multiplier: ${window.sizeTaxMult} (Cost of being large)
+    - Mutation Rate: ${window.mutationRate}
+
+    Simulation Data History (Day 1 to ${simHistory.days.length}):
+    - Population: [${simHistory.pop.join(', ')}]
+    - Avg Speed: [${simHistory.speed.map(s => s.toFixed(2)).join(', ')}]
+    - Avg Size: [${simHistory.size.map(s => s.toFixed(2)).join(', ')}]
+
+    Task: Provide a highly analytical, 3-sentence summary of WHY the ecosystem collapsed. 
+    Cite specific rules (e.g. speed tax, size tax) or data trends that led to their demise. Be strictly analytical and punchy. Do not use Markdown headings.`;
+
+    try {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_API_KEY, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }] }] })
+        });
+        if (!response.ok) throw new Error("API Connection Failed");
+        const data = await response.json();
+        
+        outputBox.style.color = '#2ecc71';
+        outputBox.innerText = data.candidates[0].content.parts[0].text.trim();
+    } catch (error) {
+        outputBox.style.color = '#e74c3c';
+        outputBox.innerText = "❌ AI failed to connect. Did you add your API Key?";
+    }
+}
+
+document.getElementById('btnAiAnalyze').addEventListener('click', async () => {
+    const outputBox = document.getElementById('ai-trend-output');
+    outputBox.style.display = 'block';
+    outputBox.style.color = '#f1c40f';
+    outputBox.innerText = "🤖 The AI is looking at the data to see how your blobs are evolving...";
+
+    if (simHistory.days.length < 2) {
+        outputBox.innerText = "❌ Not enough data. Let the simulation run for a few days first!";
+        return;
+    }
+
+    const systemPrompt = `You are a statistical evolutionary biologist analyzing a Natural Selection Simulator.
+    Current Environment Variables:
+    - Food needed to survive: ${window.reqFoodSurvive}
+    - Food needed to clone: ${window.reqFoodClone}
+    - Speed Energy Tax Multiplier: ${window.speedTaxMult} (Cost of moving fast)
+    - Size Energy Tax Multiplier: ${window.sizeTaxMult} (Cost of being large)
+    - Mutation Rate: ${window.mutationRate}
+
+    Simulation Data History (Day 1 to ${simHistory.days.length}):
+    - Population: [${simHistory.pop.join(', ')}]
+    - Avg Speed: [${simHistory.speed.map(s => s.toFixed(2)).join(', ')}]
+    - Avg Size: [${simHistory.size.map(s => s.toFixed(2)).join(', ')}]
+
+    Task: Provide a highly analytical, statistical breakdown of the evolutionary arms race happening in this world. 
+    1. Cite specific percentage changes or numerical shifts from the data arrays.
+    2. Explain WHY the traits shifted (e.g., Directional Selection, Stabilizing Selection) based specifically on the Energy Tax rules.
+    3. Mention if the ecosystem hit Carrying Capacity, experienced an explosion, or suffered a population crash.
+    Keep it concise (3 short paragraphs), use bullet points if helpful, and be strictly analytical. Do not use Markdown headings.`;
+
+    try {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_API_KEY, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }] }] })
+        });
+        if (!response.ok) throw new Error("API Connection Failed");
+        const data = await response.json();
+        
+        outputBox.style.color = '#2ecc71';
+        outputBox.innerText = data.candidates[0].content.parts[0].text.trim();
+    } catch (error) {
+        outputBox.style.color = '#e74c3c';
+        outputBox.innerText = "❌ AI failed to connect. Did you add your API Key?";
+    }
+});
 </script>
 </body>
 </html>

@@ -8,13 +8,7 @@ This README is your instruction manual on how to navigate the website, use the c
 
 ## 🚀 1. How to Launch the Simulator
 
-Because this website uses advanced features (like fetching data from the Google Gemini AI), **you cannot simply double-click the `index.html` file to open it.** Your browser will block the AI from working for security reasons.
-
-**To run the website properly:**
-1. Open the project folder in a code editor like **Visual Studio Code (VS Code)**.
-2. Install the free extension called **Live Server**.
-3. Right-click the `index.html` file and select **"Open with Live Server"** (or click the "Go Live" button at the bottom right of your screen).
-4. The website will open in your browser at a local address (like `http://127.0.0.1:5500`).
+Use the website here: https://sai-teja-7.github.io/natural-selection-simulator/
 
 ---
 

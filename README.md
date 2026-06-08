@@ -81,6 +81,3 @@ In the bottom right corner, you will find the **AI Biologist** panel. This uses 
 **The Extinction Event:**
 If you make the rules too harsh and all the blobs die, the screen will turn dark and a giant **"EXTINCT"** window will appear. The AI Biologist will automatically scan the final moments of the civilization and write an "Autopsy Report" explaining why they collapsed!
 
----
-
-Enjoy playing god, tweaking the physics, and discovering the harsh realities of natural selection! 🧬
